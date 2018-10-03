@@ -1,17 +1,24 @@
 package com.marcos.desafioprog.desafioprog.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.marcos.desafioprog.desafioprog.enums.TipoOperacao;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-public class Transferencia {
+public class Operacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private Double valor;
+
+    private Integer tipoOperacao;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataHora;
 
     @ManyToOne
@@ -22,11 +29,18 @@ public class Transferencia {
     @JoinColumn(name = "conta_destino")
     private Conta contaDestino;
 
-    public Transferencia(Double valor, LocalDateTime dataHora, Conta contaOrigem, Conta contaDestino) {
+    public Operacao(Double valor, LocalDateTime dataHora, Conta contaOrigem, Conta contaDestino) {
         this.valor = valor;
         this.dataHora = dataHora;
         this.contaOrigem = contaOrigem;
         this.contaDestino = contaDestino;
+    }
+
+    public Operacao() {
+    }
+
+    public Operacao(Double valor) {
+        this.valor = valor;
     }
 
     public Integer getId() {
@@ -69,11 +83,19 @@ public class Transferencia {
         this.contaDestino = contaDestino;
     }
 
+    public TipoOperacao getTipoOperacao() {
+        return TipoOperacao.toEnum(this.tipoOperacao);
+    }
+
+    public void setTipoOperacao(TipoOperacao tipoOperacao) {
+        this.tipoOperacao = tipoOperacao.getCod();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Transferencia that = (Transferencia) o;
+        Operacao that = (Operacao) o;
         return Objects.equals(getId(), that.getId());
     }
 

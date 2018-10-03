@@ -1,43 +1,63 @@
 package com.marcos.desafioprog.desafioprog.services;
 
 import com.marcos.desafioprog.desafioprog.domain.Cliente;
+import com.marcos.desafioprog.desafioprog.domain.Conta;
 import com.marcos.desafioprog.desafioprog.exceptions.ObjectNotFoundException;
 import com.marcos.desafioprog.desafioprog.repositories.ClienteRepository;
+import com.marcos.desafioprog.desafioprog.repositories.ContaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ClienteService {
 
     @Autowired
-    private ClienteRepository repo;
+    private ClienteRepository clienteRepository;
+    @Autowired
+    private ContaRepository contaRepository;
 
     public Cliente find(Integer id){
-        Optional<Cliente> obj = repo.findById(id);
+        Optional<Cliente> obj = clienteRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id
                 + ", Tipo: " + Cliente.class.getName()));
     }
 
     public Cliente insert(Cliente obj) {
         obj.setId(null);
-        return repo.save(obj);
+        obj.setIdConta(null);
+
+        Conta conta =  new Conta(null, obj.getDataCriacao(), 0.0);
+        conta = contaRepository.save(conta);
+        if(conta!=null){
+            obj.setIdConta(conta);
+            return clienteRepository.save(obj);
+        }
+
+        return null;
     }
 
     public Cliente update(Cliente obj) {
-        find(obj.getId());
-        return repo.save(obj);
+        Cliente existente = find(obj.getId());
+        if(obj.getCpf() == null) obj.setCpf(existente.getCpf());
+        if(obj.getDataCriacao() == null) obj.setDataCriacao(existente.getDataCriacao());
+        obj.setIdConta(existente.getIdConta());
+        if(obj.getNome() == null) obj.setNome(existente.getNome());
+
+        return clienteRepository.save(obj);
     }
 
     public void delete(Integer id) {
         find(id);
-        repo.deleteById(id);
+        clienteRepository.deleteById(id);
 
 
     }
 
     public List<Cliente> findAll() {
-        return repo.findAll();
+        return clienteRepository.findAll();
     }
 }

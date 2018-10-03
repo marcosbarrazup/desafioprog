@@ -1,4 +1,4 @@
-package com.marcos.cursomc.resources;
+package com.marcos.desafioprog.desafioprog.resources;
 
 import com.marcos.desafioprog.desafioprog.domain.Cliente;
 import com.marcos.desafioprog.desafioprog.dto.ClienteDTO;
@@ -12,25 +12,26 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @RestController
 @RequestMapping(value = "/clientes")
 public class ClienteResource {
 
     @Autowired
-    private ClienteService service;
+    private ClienteService clienteService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Cliente> find(@PathVariable Integer id) {
-        Cliente obj = service.find(id);
+    public ResponseEntity<?> find(@PathVariable Integer  id){
 
+        Cliente obj = clienteService.find(id);
         return ResponseEntity.ok().body(obj);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/inserir-cliente", method = RequestMethod.POST)
     public ResponseEntity<Void> insert(@RequestBody Cliente obj) {
 
-        obj = service.insert(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+        obj = clienteService.insert(obj);
+        URI uri = ServletUriComponentsBuilder.fromPath("localhost:8080/clientes").path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
 
 
@@ -39,20 +40,20 @@ public class ClienteResource {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> update(@RequestBody Cliente obj, @PathVariable Integer id) {
         obj.setId(id);
-        obj = service.update(obj);
+        obj = clienteService.update(obj);
         return ResponseEntity.noContent().build();
 
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        service.delete(id);
+        clienteService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-        @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity <List<ClienteDTO>> findAll(){
-        List<Cliente> list = service.findAll();
+        List<Cliente> list = clienteService.findAll();
         List<ClienteDTO> listDto =  list.stream().map(obj -> new ClienteDTO(obj)).collect(Collectors.toList());
 
         return ResponseEntity.ok().body(listDto);

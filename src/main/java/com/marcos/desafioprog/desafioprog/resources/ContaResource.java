@@ -1,0 +1,88 @@
+package com.marcos.desafioprog.desafioprog.resources;
+
+import com.marcos.desafioprog.desafioprog.domain.Conta;
+import com.marcos.desafioprog.desafioprog.domain.Operacao;
+import com.marcos.desafioprog.desafioprog.enums.TipoOperacao;
+import com.marcos.desafioprog.desafioprog.exceptions.InsufficientBalanceException;
+import com.marcos.desafioprog.desafioprog.services.ContaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.time.LocalDateTime;
+
+@RestController
+@RequestMapping(value = "/contas")
+public class ContaResource {
+    @Autowired
+    private ContaService service;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String listar(){
+
+        return "REST  funcionando!";
+    }
+
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> find(@PathVariable Integer  id){
+
+        Conta obj = service.find(id);
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @RequestMapping(value = "/{origem}/transfer/{destino}", method = RequestMethod.POST)
+    public ResponseEntity<?> transfer (@PathVariable Integer origem, @RequestBody Operacao operacao, @PathVariable Integer destino){
+
+        operacao.setId(null);
+        operacao.setContaDestino(service.find(destino));
+        operacao.setTipoOperacao(TipoOperacao.TRANSFERENCIA);
+        operacao.setContaOrigem(service.find(origem));
+        operacao.setDataHora(LocalDateTime.now());
+        service.transfer(operacao);
+        return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(value = "/{id}/deposit", method = RequestMethod.POST)
+    public ResponseEntity<?> deposit (@PathVariable Integer id,  @RequestBody Operacao operacao){
+
+        operacao.setId(null);
+        operacao.setTipoOperacao(TipoOperacao.DEPOSITO);
+        operacao.setContaOrigem(service.find(id));
+        operacao.setContaDestino(service.find(id));
+        operacao.setDataHora(LocalDateTime.now());
+        Operacao obj = service.deposit(operacao);
+
+        URI uri = ServletUriComponentsBuilder.fromPath("localhost:8080/depositos").path("/{id}").buildAndExpand(obj.getId()).toUri();
+        return ResponseEntity.created(uri).build();
+    }
+
+
+    @RequestMapping(value = "/{id}/withdraw",  method = RequestMethod.POST)
+    public ResponseEntity<?> withdraw(@PathVariable Integer id, @RequestBody Operacao operacao){
+
+        operacao.setId(null);
+        operacao.setTipoOperacao(TipoOperacao.SAQUE);
+        operacao.setContaOrigem(service.find(id));
+        operacao.setContaDestino(service.find(id));
+        operacao.setDataHora(LocalDateTime.now());
+        Boolean result = service.withdraw(operacao);
+
+        if(result) return ResponseEntity.ok().build();
+        throw new InsufficientBalanceException("Saldo Insuficiente!");
+    }
+
+    @RequestMapping(value = "/{id}/balance", method = RequestMethod.GET)
+    public String balance(@PathVariable Integer  id){
+
+        Conta obj = service.find(id);
+        return ("ID: " + id
+                + "\nSaldo: R$"
+                + obj.getSaldo()
+        );
+    }
+
+
+}

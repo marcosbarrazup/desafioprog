@@ -1,11 +1,11 @@
 package com.marcos.desafioprog.desafioprog.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,28 +15,30 @@ public class Conta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Integer id;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataCriacao;
     private Double saldo;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "conta")
-    private List<Cliente> clientes;
+    @OneToOne(mappedBy = "conta")
+    private Cliente clientes;
 
     @JsonIgnore
     @OneToMany(mappedBy = "contaOrigem")
-    private List<Transferencia>  transferenciasOrigem;
+    private List<Operacao>  operacoesOrigem;
 
     @JsonIgnore
     @OneToMany(mappedBy = "contaDestino")
-    private List<Transferencia>  transferenciasDestino;
+    private List<Operacao>  operacoesDestino;
 
 
+    public Conta() {
+    }
 
-
-    public Conta(Integer id, String dataCriacao, Double saldo) {
+    public Conta(Integer id, LocalDate dataCriacao, Double saldo) {
         this.id = id;
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        this.dataCriacao = LocalDate.parse(dataCriacao, dateTimeFormatter);
+        this.dataCriacao = dataCriacao;
         this.saldo = saldo;
     }
 
@@ -64,12 +66,28 @@ public class Conta {
         this.saldo = saldo;
     }
 
-    public List<Cliente> getClientes() {
+    public Cliente getClientes() {
         return clientes;
     }
 
-    public void setClientes(List<Cliente> clientes) {
+    public void setClientes(Cliente clientes) {
         this.clientes = clientes;
+    }
+
+    public List<Operacao> getOperacoesOrigem() {
+        return operacoesOrigem;
+    }
+
+    public void setOperacoesOrigem(List<Operacao> operacoesOrigem) {
+        this.operacoesOrigem = operacoesOrigem;
+    }
+
+    public List<Operacao> getOperacoesDestino() {
+        return operacoesDestino;
+    }
+
+    public void setOperacoesDestino(List<Operacao> operacoesDestino) {
+        this.operacoesDestino = operacoesDestino;
     }
 
     @Override
@@ -83,5 +101,17 @@ public class Conta {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public void deposita(Double valor) {
+        this.saldo+= valor;
+    }
+
+    public boolean saca(Double valor) {
+        if(this.saldo-valor>=0.0) {
+            this.saldo -=valor;
+            return true;
+        }
+        return false;
     }
 }

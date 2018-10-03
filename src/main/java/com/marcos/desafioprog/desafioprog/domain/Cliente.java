@@ -1,5 +1,8 @@
 package com.marcos.desafioprog.desafioprog.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.text.DateFormat;
@@ -18,11 +21,17 @@ public class Cliente {
 
     private String cpf;
     private String nome;
+
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataCriacao;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "conta_id")
     private Conta conta;
+
+    public Cliente() {
+    }
 
     public Cliente(Integer id, String cpf, String nome, String dataCriacao, Conta idConta) {
         this.id = id;
@@ -30,8 +39,7 @@ public class Cliente {
         this.nome = nome;
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         this.dataCriacao = LocalDate.parse(dataCriacao, dateTimeFormatter);
-        if(idConta ==null) this.conta = new Conta(null,dataCriacao,0.0);
-        else this.conta  = idConta;
+        this.conta  = idConta;
     }
 
     public Integer getId() {
