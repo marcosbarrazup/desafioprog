@@ -42,11 +42,9 @@ public class ContaResource {
     @RequestMapping(value = "/{origem}/transfer/{destino}", method = RequestMethod.POST)
     public ResponseEntity<?> transfer (@PathVariable Integer origem, @RequestBody Operacao operacao, @PathVariable Integer destino){
 
-        operacao.setId(null);
-        operacao.setContaDestino(service.find(destino));
-        operacao.setTipoOperacao(TipoOperacao.TRANSFERENCIA);
         operacao.setContaOrigem(service.find(origem));
-        operacao.setDataHora(LocalDateTime.now());
+        operacao.setContaDestino(service.find(destino));
+
         service.transfer(operacao);
         return ResponseEntity.noContent().build();
     }
@@ -54,11 +52,10 @@ public class ContaResource {
     @RequestMapping(value = "/{id}/deposit", method = RequestMethod.POST)
     public ResponseEntity<?> deposit (@PathVariable Integer id,  @RequestBody Operacao operacao){
 
-        operacao.setId(null);
-        operacao.setTipoOperacao(TipoOperacao.DEPOSITO);
+
         operacao.setContaOrigem(service.find(id));
         operacao.setContaDestino(service.find(id));
-        operacao.setDataHora(LocalDateTime.now());
+
         Operacao obj = service.deposit(operacao);
 
         URI uri = ServletUriComponentsBuilder.fromPath("localhost:8080/depositos").path("/{id}").buildAndExpand(obj.getId()).toUri();
@@ -69,11 +66,9 @@ public class ContaResource {
     @RequestMapping(value = "/{id}/withdraw",  method = RequestMethod.POST)
     public ResponseEntity<?> withdraw(@PathVariable Integer id, @RequestBody Operacao operacao){
 
-        operacao.setId(null);
-        operacao.setTipoOperacao(TipoOperacao.SAQUE);
         operacao.setContaOrigem(service.find(id));
         operacao.setContaDestino(service.find(id));
-        operacao.setDataHora(LocalDateTime.now());
+
         Boolean result = service.withdraw(operacao);
 
         if(result) return ResponseEntity.ok().build();

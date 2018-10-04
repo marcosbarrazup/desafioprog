@@ -32,10 +32,10 @@ public class ClienteService {
         obj.setIdConta(null);
         obj.setDataCriacao(LocalDate.now());
         Conta conta =  new Conta(null, obj.getDataCriacao(), 0.0);
-        conta = contaRepository.save(conta);
+        conta = contaRepository.saveAndFlush(conta);
         if(conta!=null){
             obj.setIdConta(conta);
-            return clienteRepository.save(obj);
+            return clienteRepository.saveAndFlush(obj);
         }
 
         return null;
@@ -48,7 +48,7 @@ public class ClienteService {
         obj.setIdConta(existente.getIdConta());
         if(obj.getNome() == null) obj.setNome(existente.getNome());
 
-        return clienteRepository.save(obj);
+        return clienteRepository.saveAndFlush(obj);
     }
 
     public void delete(Integer id) {

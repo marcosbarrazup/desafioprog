@@ -60,30 +60,57 @@ public class ClienteServiceTest extends DesafioProgBaseTest {
     @Test
     public void insertOk(){
         Conta conta = new Conta();
-        when(contaRepository.save(any(Conta.class))).thenReturn(conta);
+        when(contaRepository.saveAndFlush(any(Conta.class))).thenReturn(conta);
         Cliente cliente = new Cliente();
-        when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
+        when(clienteRepository.saveAndFlush(any(Cliente.class))).thenReturn(cliente);
         Cliente result = clienteService.insert(cliente);
         assertNotNull(result);
     }
     @Test
-    public void insertNotOk(){
+    public void insertNotSavedConta(){
         Conta conta = new Conta();
-        when(contaRepository.save(any(Conta.class))).thenReturn(null);
+        when(contaRepository.saveAndFlush(any(Conta.class))).thenReturn(null);
         Cliente cliente = new Cliente();
         Cliente result = clienteService.insert(cliente);
         assertNull(result);
     }
 
     @Test
+    public void insertNotSavedCliente(){
+        Conta conta = new Conta();
+        when(contaRepository.saveAndFlush(any(Conta.class))).thenReturn(conta);
+        when(clienteRepository.saveAndFlush(any(Cliente.class))).thenReturn(null);
+        Cliente cliente = new Cliente();
+        Cliente result = clienteService.insert(cliente);
+        assertNull(result);
+    }
+    @Test
     public void updateOk(){
         Cliente cliente = new Cliente();
         cliente.setId(10);
-        when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
+        when(clienteRepository.saveAndFlush(any(Cliente.class))).thenReturn(cliente);
         when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(cliente));
         Cliente result = clienteService.update(cliente);
         assertNotNull(result);
     }
+    @Test
+    public void updateInvalidCliente(){
+        Cliente cliente = new Cliente();
+        when(clienteRepository.saveAndFlush(any(Cliente.class))).thenReturn(null);
+        thrown.expect(ObjectNotFoundException.class);
+        Cliente result = clienteService.update(cliente);
+
+    }
+    @Test
+    public void updateNotSaved(){
+        Cliente cliente = new Cliente();
+        cliente.setId(10);
+        when(clienteRepository.saveAndFlush(any(Cliente.class))).thenReturn(null);
+        when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(cliente));
+        Cliente result = clienteService.update(cliente);
+        assertNull(result);
+    }
+
 
     @Test
     public void deleteOk(){
@@ -94,6 +121,16 @@ public class ClienteServiceTest extends DesafioProgBaseTest {
         clienteService.delete(10);
 
         verify((clienteRepository), times(1)).deleteById(anyInt());
+    }
+    @Test
+    public void deleteInvalidCliente(){
+        Cliente cliente = new Cliente();
+        cliente.setId(10);
+        when(clienteRepository.findById(anyInt())).thenReturn(Optional.ofNullable(null));
+        thrown.expect(ObjectNotFoundException.class);
+        clienteService.delete(10);
+
+        verify((clienteRepository), times(0)).deleteById(anyInt());
     }
 
     @Test
