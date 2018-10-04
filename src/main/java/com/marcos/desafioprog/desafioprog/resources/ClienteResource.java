@@ -2,7 +2,7 @@ package com.marcos.desafioprog.desafioprog.resources;
 
 import com.marcos.desafioprog.desafioprog.domain.Cliente;
 import com.marcos.desafioprog.desafioprog.dto.ClienteDTO;
-import com.marcos.desafioprog.desafioprog.services.ClienteServiceTest;
+import com.marcos.desafioprog.desafioprog.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ClienteResource {
 
     @Autowired
-    private ClienteServiceTest clienteService;
+    private ClienteService clienteService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> find(@PathVariable Integer  id){
