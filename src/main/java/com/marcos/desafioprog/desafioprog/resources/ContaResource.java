@@ -2,6 +2,7 @@ package com.marcos.desafioprog.desafioprog.resources;
 
 import com.marcos.desafioprog.desafioprog.domain.Conta;
 import com.marcos.desafioprog.desafioprog.domain.Operacao;
+import com.marcos.desafioprog.desafioprog.dto.ContaDTO;
 import com.marcos.desafioprog.desafioprog.enums.TipoOperacao;
 import com.marcos.desafioprog.desafioprog.exceptions.InsufficientBalanceException;
 import com.marcos.desafioprog.desafioprog.services.ContaService;
@@ -12,6 +13,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/contas")
@@ -20,9 +24,11 @@ public class ContaResource {
     private ContaService service;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String listar(){
+    public ResponseEntity <List<ContaDTO>> findAll(){
+        List<Conta> list = service.findAll();
+        List<ContaDTO> listDto =  list.stream().map(obj -> new ContaDTO(obj)).collect(Collectors.toList());
 
-        return "REST  funcionando!";
+        return ResponseEntity.ok().body(listDto);
     }
 
 
@@ -85,4 +91,11 @@ public class ContaResource {
     }
 
 
+    @RequestMapping(value = "/{id}/extrato", method = RequestMethod.GET)
+    public ResponseEntity<?> extrato(@PathVariable Integer id){
+
+        Set<Operacao> set = service.extrato(id);
+        return ResponseEntity.ok().body(set);
+
+    }
 }

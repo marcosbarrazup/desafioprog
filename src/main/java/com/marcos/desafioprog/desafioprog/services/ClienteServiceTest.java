@@ -9,11 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ClienteService {
+public class ClienteServiceTest {
 
     @Autowired
     private ClienteRepository clienteRepository;
@@ -29,7 +30,7 @@ public class ClienteService {
     public Cliente insert(Cliente obj) {
         obj.setId(null);
         obj.setIdConta(null);
-
+        obj.setDataCriacao(LocalDate.now());
         Conta conta =  new Conta(null, obj.getDataCriacao(), 0.0);
         conta = contaRepository.save(conta);
         if(conta!=null){

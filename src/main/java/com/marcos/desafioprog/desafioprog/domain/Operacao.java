@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.marcos.desafioprog.desafioprog.enums.TipoOperacao;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-public class Operacao {
+public class Operacao implements Serializable {
+    private static long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +37,7 @@ public class Operacao {
         this.contaOrigem = contaOrigem;
         this.contaDestino = contaDestino;
     }
+
 
     public Operacao() {
     }

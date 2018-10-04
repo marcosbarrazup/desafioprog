@@ -11,6 +11,9 @@ public class ClienteDTO {
     private String nome;
     private LocalDate dataCriacao;
 
+    public ClienteDTO() {
+    }
+
     public ClienteDTO(Cliente c){
         this.id = c.getId();
         this.nome = c.getNome();

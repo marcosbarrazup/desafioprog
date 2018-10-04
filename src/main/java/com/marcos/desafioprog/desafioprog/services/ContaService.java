@@ -2,13 +2,16 @@ package com.marcos.desafioprog.desafioprog.services;
 
 import com.marcos.desafioprog.desafioprog.domain.Conta;
 import com.marcos.desafioprog.desafioprog.domain.Operacao;
+import com.marcos.desafioprog.desafioprog.exceptions.InsufficientBalanceException;
 import com.marcos.desafioprog.desafioprog.exceptions.ObjectNotFoundException;
 import com.marcos.desafioprog.desafioprog.repositories.ContaRepository;
 import com.marcos.desafioprog.desafioprog.repositories.OperacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ContaService {
@@ -24,13 +27,13 @@ public class ContaService {
                 + ", Tipo: " + Conta.class.getName()));
     }
 
-    public void transfer(Operacao operacao) {
+    public Operacao transfer(Operacao operacao) {
 
         if(operacao.getContaOrigem().saca(operacao.getValor())) {
             operacao.getContaDestino().deposita(operacao.getValor());
+            return operacaoRepository.save(operacao);
         }
-        operacaoRepository.save(operacao);
-
+            throw new InsufficientBalanceException("Saldo Insuficiente!");
     }
 
     public Operacao deposit(Operacao operacao) {
@@ -49,5 +52,19 @@ public class ContaService {
             return true;
         }
         return  false;
+    }
+    public List<Conta> findAll() {
+        return contaRepository.findAll();
+    }
+
+    public Set<Operacao> extrato(Integer id) {
+        Conta conta = find(id);
+        Set<Operacao> set = operacaoRepository.
+                findAll().
+                stream().
+                filter(c ->
+                c.getContaOrigem().getId() == id || c.getContaDestino().getId() == id).collect(Collectors.toSet());
+
+        return  set;
     }
 }
