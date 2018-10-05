@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.marcos.desafioprog.desafioprog.enums.TipoOperacao;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -16,6 +17,7 @@ public class Operacao implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Min(1)
     private Double valor;
 
     private Integer tipoOperacao;

@@ -150,11 +150,15 @@ public class ClienteServiceTest extends DesafioProgBaseTest {
     public void deleteOk(){
         Cliente cliente = new Cliente();
         cliente.setId(10);
+        Conta conta = new Conta();
+        conta.setId(10);
+        cliente.setIdConta(conta);
         when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(cliente));
 
         clienteService.delete(10);
 
         verify((clienteRepository), times(1)).deleteById(anyInt());
+        verify((contaRepository), times(1)).deleteById(anyInt());
     }
     @Test
     public void deleteInvalidCliente(){

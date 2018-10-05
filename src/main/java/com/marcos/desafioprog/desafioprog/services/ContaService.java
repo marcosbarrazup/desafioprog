@@ -44,6 +44,7 @@ public class ContaService {
     }
 
     public Operacao deposit(Operacao operacao) {
+
         operacao.setId(null);
         operacao.setTipoOperacao(TipoOperacao.DEPOSITO);
         operacao.setDataHora(LocalDateTime.now());

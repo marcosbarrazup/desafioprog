@@ -64,8 +64,10 @@ public class ClienteService {
     }
 
     public void delete(Integer id) {
-        find(id);
+        Cliente cliente = find(id);
         clienteRepository.deleteById(id);
+        contaRepository.deleteById(cliente.getIdConta().getId());
+
 
 
     }

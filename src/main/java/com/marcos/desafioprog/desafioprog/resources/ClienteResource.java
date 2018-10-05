@@ -29,27 +29,27 @@ public class ClienteResource {
     }
 
     @RequestMapping(value = "/inserir-cliente", method = RequestMethod.POST)
-    public ResponseEntity<Void> insert(@RequestBody Cliente obj) {
+    public ResponseEntity<?> insert(@RequestBody Cliente obj) {
 
         obj = clienteService.insert(obj);
         URI uri = ServletUriComponentsBuilder.fromPath("localhost:8080/clientes").path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body("Cliente inserido com sucesso!");
 
 
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Cliente obj, @PathVariable Integer id) {
+    public ResponseEntity<?> update(@RequestBody Cliente obj, @PathVariable Integer id) {
         obj.setId(id);
         obj = clienteService.update(obj);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Cliente atualizado!");
 
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
         clienteService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body("Cliente e conta associada deletados!");
     }
 
     @RequestMapping(method = RequestMethod.GET)

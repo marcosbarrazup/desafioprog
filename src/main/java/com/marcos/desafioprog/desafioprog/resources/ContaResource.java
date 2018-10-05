@@ -4,6 +4,7 @@ import com.marcos.desafioprog.desafioprog.domain.Conta;
 import com.marcos.desafioprog.desafioprog.domain.Operacao;
 import com.marcos.desafioprog.desafioprog.dto.ContaDTO;
 import com.marcos.desafioprog.desafioprog.enums.TipoOperacao;
+import com.marcos.desafioprog.desafioprog.exceptions.ExistentAccountException;
 import com.marcos.desafioprog.desafioprog.exceptions.InsufficientBalanceException;
 import com.marcos.desafioprog.desafioprog.services.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +43,12 @@ public class ContaResource {
     @RequestMapping(value = "/{origem}/transfer/{destino}", method = RequestMethod.POST)
     public ResponseEntity<?> transfer (@PathVariable Integer origem, @RequestBody Operacao operacao, @PathVariable Integer destino){
 
+        if(origem ==  destino) throw new ExistentAccountException("Não é possível transferir para a mesma conta!");
         operacao.setContaOrigem(service.find(origem));
         operacao.setContaDestino(service.find(destino));
 
         service.transfer(operacao);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body("Transferência Aceita!");
     }
 
     @RequestMapping(value = "/{id}/deposit", method = RequestMethod.POST)
@@ -59,7 +61,7 @@ public class ContaResource {
         Operacao obj = service.deposit(operacao);
 
         URI uri = ServletUriComponentsBuilder.fromPath("localhost:8080/depositos").path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body("Depósito concluído!");
     }
 
 
@@ -71,7 +73,7 @@ public class ContaResource {
 
         Boolean result = service.withdraw(operacao);
 
-        if(result) return ResponseEntity.ok().build();
+        if(result) return ResponseEntity.ok().body("Saque efetuado!");
         throw new InsufficientBalanceException("Saldo Insuficiente!");
     }
 
