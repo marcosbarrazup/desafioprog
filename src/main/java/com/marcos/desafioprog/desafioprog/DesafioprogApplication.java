@@ -33,11 +33,11 @@ public class DesafioprogApplication  implements CommandLineRunner {
 
         Cliente cli2 = new Cliente(null,"11711928172", "Joao","11/09/2018",null);
         Conta c2 = new Conta(null, cli1.getDataCriacao(), 0.0);
-        cli1.setIdConta(c2);
+        cli2.setIdConta(c2);
 
         Cliente cli3 = new Cliente(null,"01927561820", "Carlos","25/09/2018",null);
         Conta c3 = new Conta(null, cli1.getDataCriacao(), 0.0);
-        cli1.setIdConta(c3);
+        cli3.setIdConta(c3);
 		contaRepository.saveAll(Arrays.asList(c1, c2, c3));
 		clienteRepository.saveAll(Arrays.asList(cli1, cli2, cli3));
 

@@ -10,6 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -41,7 +42,7 @@ public class ClienteResource {
     public ResponseEntity<Void> update(@RequestBody Cliente obj, @PathVariable Integer id) {
         obj.setId(id);
         obj = clienteService.update(obj);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
 
     }
 

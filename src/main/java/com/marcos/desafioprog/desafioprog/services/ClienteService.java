@@ -2,6 +2,7 @@ package com.marcos.desafioprog.desafioprog.services;
 
 import com.marcos.desafioprog.desafioprog.domain.Cliente;
 import com.marcos.desafioprog.desafioprog.domain.Conta;
+import com.marcos.desafioprog.desafioprog.exceptions.ExistentAccountException;
 import com.marcos.desafioprog.desafioprog.exceptions.ObjectNotFoundException;
 import com.marcos.desafioprog.desafioprog.repositories.ClienteRepository;
 import com.marcos.desafioprog.desafioprog.repositories.ContaRepository;
@@ -21,32 +22,43 @@ public class ClienteService {
     @Autowired
     private ContaRepository contaRepository;
 
-    public Cliente find(Integer id){
+    public Cliente find(Integer id) throws ObjectNotFoundException {
         Optional<Cliente> obj = clienteRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id
                 + ", Tipo: " + Cliente.class.getName()));
     }
 
-    public Cliente insert(Cliente obj) {
-        obj.setId(null);
-        obj.setIdConta(null);
-        obj.setDataCriacao(LocalDate.now());
-        Conta conta =  new Conta(null, obj.getDataCriacao(), 0.0);
-        conta = contaRepository.saveAndFlush(conta);
-        if(conta!=null){
-            obj.setIdConta(conta);
-            return clienteRepository.saveAndFlush(obj);
+    public Cliente insert(Cliente obj) throws ExistentAccountException, IllegalArgumentException{
+
+        if(obj.getCpf()== null) {
+            throw new IllegalArgumentException("Cpf inválido!");
+        }
+        else if (obj.getNome() == null){
+            throw new IllegalArgumentException("Nome inválido!");
         }
 
-        return null;
+        if (clienteRepository.findByCpf(obj.getCpf()) == null) {
+            obj.setId(null);
+            obj.setIdConta(null);
+            obj.setDataCriacao(LocalDate.now());
+            Conta conta = new Conta(null, obj.getDataCriacao(), 0.0);
+            conta = contaRepository.saveAndFlush(conta);
+            if (conta != null) {
+                obj.setIdConta(conta);
+                return clienteRepository.saveAndFlush(obj);
+            }
+            return null;
+        }
+
+        throw new ExistentAccountException("Erro! CPF já cadastrado.");
     }
 
     public Cliente update(Cliente obj) {
         Cliente existente = find(obj.getId());
-        if(obj.getCpf() == null) obj.setCpf(existente.getCpf());
-        if(obj.getDataCriacao() == null) obj.setDataCriacao(existente.getDataCriacao());
+        if (obj.getCpf() == null) obj.setCpf(existente.getCpf());
+        obj.setDataCriacao(existente.getDataCriacao());
         obj.setIdConta(existente.getIdConta());
-        if(obj.getNome() == null) obj.setNome(existente.getNome());
+        if (obj.getNome() == null) obj.setNome(existente.getNome());
 
         return clienteRepository.saveAndFlush(obj);
     }

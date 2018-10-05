@@ -2,6 +2,7 @@ package com.marcos.desafioprog.desafioprog.services;
 
 import com.marcos.desafioprog.desafioprog.domain.Cliente;
 import com.marcos.desafioprog.desafioprog.domain.Conta;
+import com.marcos.desafioprog.desafioprog.exceptions.ExistentAccountException;
 import com.marcos.desafioprog.desafioprog.exceptions.ObjectNotFoundException;
 import com.marcos.desafioprog.desafioprog.repositories.ClienteRepository;
 import com.marcos.desafioprog.desafioprog.repositories.ContaRepository;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,6 +64,8 @@ public class ClienteServiceTest extends DesafioProgBaseTest {
         Conta conta = new Conta();
         when(contaRepository.saveAndFlush(any(Conta.class))).thenReturn(conta);
         Cliente cliente = new Cliente();
+        cliente.setCpf("1920182931");
+        cliente.setNome("Nome");
         when(clienteRepository.saveAndFlush(any(Cliente.class))).thenReturn(cliente);
         Cliente result = clienteService.insert(cliente);
         assertNotNull(result);
@@ -71,6 +75,8 @@ public class ClienteServiceTest extends DesafioProgBaseTest {
         Conta conta = new Conta();
         when(contaRepository.saveAndFlush(any(Conta.class))).thenReturn(null);
         Cliente cliente = new Cliente();
+        cliente.setCpf("12312312311");
+        cliente.setNome("Nome");
         Cliente result = clienteService.insert(cliente);
         assertNull(result);
     }
@@ -81,8 +87,36 @@ public class ClienteServiceTest extends DesafioProgBaseTest {
         when(contaRepository.saveAndFlush(any(Conta.class))).thenReturn(conta);
         when(clienteRepository.saveAndFlush(any(Cliente.class))).thenReturn(null);
         Cliente cliente = new Cliente();
+        cliente.setCpf("12312312311");
+        cliente.setNome("Nome");
         Cliente result = clienteService.insert(cliente);
         assertNull(result);
+    }
+    @Test
+    public void insertExistentAccount(){
+        Cliente cliente = new Cliente();
+        cliente.setCpf("01293819203");
+        cliente.setNome("Nome");
+
+        when(clienteRepository.findByCpf(anyString())).thenReturn(cliente);
+        thrown.expect(ExistentAccountException.class);
+        clienteService.insert(cliente);
+    }
+    @Test
+    public void insertInvalidName(){
+        Cliente cliente = new Cliente();
+        cliente.setCpf("01293819203");
+
+        thrown.expect(IllegalArgumentException.class);
+        clienteService.insert(cliente);
+    }
+    @Test
+    public void insertInvalidCpf(){
+        Cliente cliente = new Cliente();
+        cliente.setNome("Nome");
+
+        thrown.expect(IllegalArgumentException.class);
+        clienteService.insert(cliente);
     }
     @Test
     public void updateOk(){

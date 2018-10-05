@@ -10,6 +10,7 @@ public class ClienteDTO {
     private Integer id;
     private String nome;
     private LocalDate dataCriacao;
+    private String cpf;
 
     public ClienteDTO() {
     }
@@ -18,6 +19,15 @@ public class ClienteDTO {
         this.id = c.getId();
         this.nome = c.getNome();
         this.dataCriacao = c.getDataCriacao();
+        this.cpf = c.getCpf();
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     @Override
@@ -27,6 +37,7 @@ public class ClienteDTO {
         ClienteDTO that = (ClienteDTO) o;
         return Objects.equals(getId(), that.getId());
     }
+
 
     @Override
     public int hashCode() {
