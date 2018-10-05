@@ -2,6 +2,7 @@ package com.marcos.desafioprog.desafioprog.services;
 
 import com.marcos.desafioprog.desafioprog.domain.Conta;
 import com.marcos.desafioprog.desafioprog.domain.Operacao;
+import com.marcos.desafioprog.desafioprog.dto.OperacaoDTO;
 import com.marcos.desafioprog.desafioprog.enums.TipoOperacao;
 import com.marcos.desafioprog.desafioprog.exceptions.InsufficientBalanceException;
 import com.marcos.desafioprog.desafioprog.exceptions.ObjectNotFoundException;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class ContaService {
@@ -69,13 +69,14 @@ public class ContaService {
         return contaRepository.findAll();
     }
 
-    public Set<Operacao> extrato(Integer id) {
+    public Set<OperacaoDTO> extrato(Integer id) {
         Conta conta = find(id);
-        Set<Operacao> set = operacaoRepository.
+        Set<OperacaoDTO> set = operacaoRepository.
                 findAll().
                 stream().
                 filter(c ->
-                c.getContaOrigem().getId() == id || c.getContaDestino().getId() == id).collect(Collectors.toSet());
+                c.getContaOrigem().getId() == id || c.getContaDestino().getId() == id)
+                .map(c -> new OperacaoDTO(c)).collect(Collectors.toSet());
 
         return  set;
     }

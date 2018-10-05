@@ -2,6 +2,7 @@ package com.marcos.desafioprog.desafioprog.services;
 
 import com.marcos.desafioprog.desafioprog.domain.Conta;
 import com.marcos.desafioprog.desafioprog.domain.Operacao;
+import com.marcos.desafioprog.desafioprog.dto.OperacaoDTO;
 import com.marcos.desafioprog.desafioprog.enums.TipoOperacao;
 import com.marcos.desafioprog.desafioprog.exceptions.InsufficientBalanceException;
 import com.marcos.desafioprog.desafioprog.exceptions.ObjectNotFoundException;
@@ -156,7 +157,7 @@ public class ContaServiceTest extends DesafioProgBaseTest {
         list.add(operacao);
         when(operacaoRepository.findAll()).thenReturn(list);
         when(contaRepository.findById(anyInt())).thenReturn(Optional.of(conta1));
-        Set<Operacao> result = contaService.extrato(1);
+        Set<OperacaoDTO> result = contaService.extrato(1);
         assertNotNull(result);
         assertEquals(1,result.size());
     }
@@ -165,7 +166,7 @@ public class ContaServiceTest extends DesafioProgBaseTest {
         List<Operacao> list = new ArrayList<>();
         when(operacaoRepository.findAll()).thenReturn(list);
         when(contaRepository.findById(anyInt())).thenReturn(Optional.of(conta1));
-        Set<Operacao> result = contaService.extrato(1);
+        Set<OperacaoDTO> result = contaService.extrato(1);
         assertNotNull(result);
         assertEquals(0,result.size());
     }
@@ -177,7 +178,7 @@ public class ContaServiceTest extends DesafioProgBaseTest {
         when(operacaoRepository.findAll()).thenReturn(list);
         when(contaRepository.findById(anyInt())).thenReturn(Optional.ofNullable(null));
         thrown.expect(ObjectNotFoundException.class);
-        Set<Operacao> result = contaService.extrato(1);
+        Set<OperacaoDTO> result = contaService.extrato(1);
 
     }
 

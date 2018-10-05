@@ -28,13 +28,13 @@ public class ClienteService {
                 + ", Tipo: " + Cliente.class.getName()));
     }
 
-    public Cliente insert(Cliente obj) throws ExistentAccountException, IllegalArgumentException{
+    public Cliente insert(Cliente obj) throws ExistentAccountException{
 
         if(obj.getCpf()== null) {
-            throw new IllegalArgumentException("Cpf inválido!");
+            throw new IllegalArgumentException("Erro: CPF não informado!");
         }
         else if (obj.getNome() == null){
-            throw new IllegalArgumentException("Nome inválido!");
+            throw new IllegalArgumentException("Erro: Nome não informado!");
         }
 
         if (clienteRepository.findByCpf(obj.getCpf()) == null) {
@@ -54,13 +54,23 @@ public class ClienteService {
     }
 
     public Cliente update(Cliente obj) {
-        Cliente existente = find(obj.getId());
-        if (obj.getCpf() == null) obj.setCpf(existente.getCpf());
-        obj.setDataCriacao(existente.getDataCriacao());
-        obj.setIdConta(existente.getIdConta());
-        if (obj.getNome() == null) obj.setNome(existente.getNome());
 
-        return clienteRepository.saveAndFlush(obj);
+        if(obj.getCpf()== null) {
+            throw new IllegalArgumentException("Erro: CPF não informado!");
+        }
+        else if (obj.getNome() == null){
+            throw new IllegalArgumentException("Erro: Nome não informado!");
+        }
+
+        if (clienteRepository.findByCpf(obj.getCpf()) == null) {
+            Cliente existente = find(obj.getId());
+            obj.setDataCriacao(existente.getDataCriacao());
+            obj.setIdConta(existente.getIdConta());
+
+            return clienteRepository.saveAndFlush(obj);
+        }
+
+        throw new ExistentAccountException("Erro! CPF já cadastrado.");
     }
 
     public void delete(Integer id) {
@@ -68,11 +78,10 @@ public class ClienteService {
         clienteRepository.deleteById(id);
         contaRepository.deleteById(cliente.getIdConta().getId());
 
-
-
     }
 
     public List<Cliente> findAll() {
         return clienteRepository.findAll();
     }
+
 }

@@ -3,6 +3,7 @@ package com.marcos.desafioprog.desafioprog.resources;
 import com.marcos.desafioprog.desafioprog.domain.Conta;
 import com.marcos.desafioprog.desafioprog.domain.Operacao;
 import com.marcos.desafioprog.desafioprog.dto.ContaDTO;
+import com.marcos.desafioprog.desafioprog.dto.OperacaoDTO;
 import com.marcos.desafioprog.desafioprog.enums.TipoOperacao;
 import com.marcos.desafioprog.desafioprog.exceptions.ExistentAccountException;
 import com.marcos.desafioprog.desafioprog.exceptions.InsufficientBalanceException;
@@ -14,6 +15,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -89,10 +92,20 @@ public class ContaResource {
 
 
     @RequestMapping(value = "/{id}/extrato", method = RequestMethod.GET)
-    public ResponseEntity<?> extrato(@PathVariable Integer id){
+    public List<ResponseEntity<?>> extrato(@PathVariable Integer id){
 
-        Set<Operacao> set = service.extrato(id);
-        return ResponseEntity.ok().body(set);
+        Set<OperacaoDTO> set = service.extrato(id);
+
+        ResponseEntity<?> responseEntity = ResponseEntity.ok().body(set);
+
+        ResponseEntity<?> responseEntity2 = ResponseEntity.ok().body("Saldo: R$" + service.find(id).getSaldo());
+
+        List<ResponseEntity<?>> list = new ArrayList<>();
+        list.add(responseEntity);
+        list.add(responseEntity2);
+
+        return list;
+
 
     }
 }
