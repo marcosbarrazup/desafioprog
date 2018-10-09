@@ -3,12 +3,14 @@ package com.marcos.desafioprog.resources.exceptions;
 import com.marcos.desafioprog.exceptions.ExistentAccountException;
 import com.marcos.desafioprog.exceptions.InsufficientBalanceException;
 import com.marcos.desafioprog.exceptions.ObjectNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -39,5 +41,13 @@ public class ResourceExceptionHandler {
 
         StandardError err = new StandardError( HttpStatus.BAD_REQUEST.value(),  e.getMessage(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+
     }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<StandardError> illegalArgument(ConstraintViolationException e, HttpServletRequest request) {
+
+        StandardError err = new StandardError( HttpStatus.BAD_REQUEST.value(),  "Valor  do  depósito deve ser maior que 1", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
 }

@@ -82,6 +82,7 @@ public class AccountService {
                 filter(c ->
                 c.getSourceAccount().getId() == id || c.getDestinationAccount().getId() == id)
                 .map(c -> new OperationDTO(c)).collect(Collectors.toList());
+        if(list.size() == 0) throw new ObjectNotFoundException("No operations found!");
 
         return  list;
     }

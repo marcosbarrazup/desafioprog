@@ -4,6 +4,7 @@ import com.marcos.desafioprog.domain.Customer;
 import com.marcos.desafioprog.dto.CustomerDTO;
 import com.marcos.desafioprog.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -43,6 +44,7 @@ public class CustomerResource {
         obj.setId(id);
         obj = customerService.update(obj);
         return ResponseEntity.ok().body(obj);
+
 
     }
 

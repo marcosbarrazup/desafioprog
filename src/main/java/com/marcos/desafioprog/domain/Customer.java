@@ -96,24 +96,24 @@ public class Customer implements Serializable {
         return Objects.hash(getId(), getCpf());
     }
 
-    private static final int[] pesoCPF = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
+    private static final int[] cpfWeight = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
 
-    private static int calcularDigito(String str, int[] peso) {
-        int soma = 0;
-        for (int indice=str.length()-1, digito; indice >= 0; indice-- ) {
-            digito = Integer.parseInt(str.substring(indice,indice+1));
-            soma += digito*peso[peso.length-str.length()+indice];
+    private static int digit(String str, int[] weight) {
+        int sum = 0;
+        for (int i=str.length()-1, digit; i >= 0; i-- ) {
+            digit = Integer.parseInt(str.substring(i,i+1));
+            sum += digit*weight[weight.length-str.length()+i];
         }
-        soma = 11 - soma % 11;
-        return soma > 9 ? 0 : soma;
+        sum = 11 - sum % 11;
+        return sum > 9 ? 0 : sum;
     }
 
     public  boolean isValidCPF() {
         if ((cpf==null) || (cpf.length()!=11)) return false;
 
-        Integer digito1 = calcularDigito(cpf.substring(0,9), pesoCPF);
-        Integer digito2 = calcularDigito(cpf.substring(0,9) + digito1, pesoCPF);
-        return cpf.equals(cpf.substring(0,9) + digito1.toString() + digito2.toString());
+        Integer digit1 = digit(cpf.substring(0,9), cpfWeight);
+        Integer digit2 = digit(cpf.substring(0,9) + digit1, cpfWeight);
+        return cpf.equals(cpf.substring(0,9) + digit1.toString() + digit2.toString());
     }
 
 }
