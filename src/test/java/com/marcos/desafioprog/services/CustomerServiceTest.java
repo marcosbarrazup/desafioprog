@@ -60,32 +60,35 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     @Test
     public void insertOk(){
         Account account = new Account();
-        when(accountRepository.saveAndFlush(any(Account.class))).thenReturn(account);
         Customer customer = new Customer();
-        customer.setCpf("1920182931");
+        customer.setCpf("87427837398");
         customer.setName("Nome");
+        when(customerRepository.findByCpf(anyString())).thenReturn(null);
+        when(accountRepository.saveAndFlush(any(Account.class))).thenReturn(account);
         when(customerRepository.saveAndFlush(any(Customer.class))).thenReturn(customer);
         Customer result = customerService.insert(customer);
         assertNotNull(result);
     }
     @Test
-    public void insertNotSavedConta(){
+    public void insertNotSavedAccount(){
         Account account = new Account();
+        when(customerRepository.findByCpf(anyString())).thenReturn(null);
         when(accountRepository.saveAndFlush(any(Account.class))).thenReturn(null);
         Customer customer = new Customer();
-        customer.setCpf("12312312311");
+        customer.setCpf("87427837398");
         customer.setName("Nome");
         Customer result = customerService.insert(customer);
         assertNull(result);
     }
 
     @Test
-    public void insertNotSavedCliente(){
+    public void insertNotSavedCustomer(){
         Account account = new Account();
+        when(customerRepository.findByCpf(anyString())).thenReturn(null);
         when(accountRepository.saveAndFlush(any(Account.class))).thenReturn(account);
         when(customerRepository.saveAndFlush(any(Customer.class))).thenReturn(null);
         Customer customer = new Customer();
-        customer.setCpf("12312312311");
+        customer.setCpf("87427837398");
         customer.setName("Nome");
         Customer result = customerService.insert(customer);
         assertNull(result);
@@ -93,7 +96,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     @Test
     public void insertExistentAccount(){
         Customer customer = new Customer();
-        customer.setCpf("01293819203");
+        customer.setCpf("87427837398");
         customer.setName("Nome");
 
         when(customerRepository.findByCpf(anyString())).thenReturn(customer);
@@ -101,7 +104,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         customerService.insert(customer);
     }
     @Test
-    public void insertInvalidName(){
+    public void insertNullName(){
         Customer customer = new Customer();
         customer.setCpf("01293819203");
 
@@ -109,7 +112,16 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         customerService.insert(customer);
     }
     @Test
-    public void insertInvalidCpf(){
+    public void insertBlankName(){
+        Customer customer = new Customer();
+        customer.setCpf("01293819203");
+        customer.setName("");
+
+        thrown.expect(IllegalArgumentException.class);
+        customerService.insert(customer);
+    }
+    @Test
+    public void insertNullCPF(){
         Customer customer = new Customer();
         customer.setName("Nome");
 
@@ -117,30 +129,76 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         customerService.insert(customer);
     }
     @Test
+    public void insertWithNot11DigitsCPF(){
+        Customer customer = new Customer();
+        customer.setName("Nome");
+        customer.setCpf("192819382");
+        thrown.expect(IllegalArgumentException.class);
+        customerService.insert(customer);
+    }
+    @Test
+    public void insertInvalidCPF(){
+        Customer customer = new Customer();
+        customer.setName("Nome");
+        customer.setCpf("91829182938");
+
+        thrown.expect(IllegalArgumentException.class);
+        customerService.insert(customer);
+    }
+
+    @Test
     public void updateOk(){
         Customer customer = new Customer();
         customer.setId(10);
+        customer.setName("Name");
+        customer.setCpf("87427837398");
+        when(customerRepository.findByCpf(anyString())).thenReturn(null);
         when(customerRepository.saveAndFlush(any(Customer.class))).thenReturn(customer);
         when(customerRepository.findById(anyInt())).thenReturn(Optional.of(customer));
         Customer result = customerService.update(customer);
         assertNotNull(result);
     }
     @Test
-    public void updateInvalidCliente(){
+    public void updateInvalidCPF(){
         Customer customer = new Customer();
-        when(customerRepository.saveAndFlush(any(Customer.class))).thenReturn(null);
-        thrown.expect(ObjectNotFoundException.class);
-        Customer result = customerService.update(customer);
+        customer.setId(10);
+        customer.setName("Name");
+        customer.setCpf("10293810293");
+        thrown.expect(IllegalArgumentException.class);
+        customerService.update(customer);
 
     }
     @Test
-    public void updateNotSaved(){
+    public void updateInvalidName(){
         Customer customer = new Customer();
         customer.setId(10);
-        when(customerRepository.saveAndFlush(any(Customer.class))).thenReturn(null);
-        when(customerRepository.findById(anyInt())).thenReturn(Optional.of(customer));
-        Customer result = customerService.update(customer);
-        assertNull(result);
+        customer.setCpf("87427837398");
+        thrown.expect(IllegalArgumentException.class);
+        customerService.update(customer);
+
+    }
+    @Test
+    public void updateNullCPF(){
+        Customer customer = new Customer();
+        customer.setId(10);
+        customer.setName("Name");
+        thrown.expect(IllegalArgumentException.class);
+        customerService.update(customer);
+
+    }
+    @Test
+    public void updateSameCPF(){
+        Customer customer = new Customer();
+        customer.setId(10);
+
+        Customer customer2 = new Customer();
+        customer2.setId(15);
+        customer2.setName("Name");
+        customer2.setCpf("87427837398");
+        when(customerRepository.findByCpf(anyString())).thenReturn(customer);
+        thrown.expect(ExistentAccountException.class);
+        customerService.update(customer2);
+
     }
 
 

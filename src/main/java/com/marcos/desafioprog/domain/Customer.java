@@ -107,13 +107,21 @@ public class Customer implements Serializable {
         sum = 11 - sum % 11;
         return sum > 9 ? 0 : sum;
     }
+    private static boolean simpleCheckNotValid(String cpf) {
+        return (cpf.length() != 11) ||
+                "00000000000".equals(cpf) || "11111111111".equals(cpf) ||
+                "22222222222".equals(cpf) || "33333333333".equals(cpf) ||
+                "44444444444".equals(cpf) || "55555555555".equals(cpf) ||
+                "66666666666".equals(cpf) || "77777777777".equals(cpf) ||
+                "88888888888".equals(cpf) || "99999999999".equals(cpf);
+    }
 
     public  boolean isValidCPF() {
         if ((cpf==null) || (cpf.length()!=11)) throw new IllegalArgumentException("CPF must have  11 digits");
 
         Integer digit1 = digit(cpf.substring(0,9), cpfWeight);
         Integer digit2 = digit(cpf.substring(0,9) + digit1, cpfWeight);
-        return cpf.equals(cpf.substring(0,9) + digit1.toString() + digit2.toString());
+        return (cpf.equals(cpf.substring(0,9) + digit1.toString() + digit2.toString())) &&(!simpleCheckNotValid(cpf));
     }
 
 }
