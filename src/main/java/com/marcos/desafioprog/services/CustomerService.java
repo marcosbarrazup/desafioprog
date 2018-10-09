@@ -31,14 +31,13 @@ public class CustomerService {
 
     public Customer insert(Customer obj) throws ExistentAccountException {
 
-        if(obj.getCpf()== null) {
+        if (obj.getCpf() == null) {
             throw new IllegalArgumentException("CPF Required!");
-        }
-        else if (obj.getName() == null){
+        } else if (obj.getName() == null || obj.getName().isEmpty()) {
             throw new IllegalArgumentException("Name Required!");
         }
 
-        if(obj.isValidCPF() ==  false) throw new IllegalArgumentException("Invalid CPF");
+        if (obj.isValidCPF() == false) throw new IllegalArgumentException("Invalid CPF");
 
         if (customerRepository.findByCpf(obj.getCpf()) == null) {
             obj.setId(null);
@@ -58,14 +57,15 @@ public class CustomerService {
 
     public Customer update(Customer obj) {
 
-        if(obj.getCpf()== null) {
+        if (obj.getCpf() == null) {
             throw new IllegalArgumentException("CPF Required!");
-        }
-        else if (obj.getName() == null){
+        } else if (obj.getName() == null || obj.getName().isEmpty()) {
             throw new IllegalArgumentException("Name Required!");
         }
 
-        if (customerRepository.findByCpf(obj.getCpf()) == null) {
+        if (obj.isValidCPF() == false) throw new IllegalArgumentException("Invalid CPF");
+
+        if (customerRepository.findByCpf(obj.getCpf()) == null || customerRepository.findByCpf(obj.getCpf()).getId() == obj.getId()) {
             Customer existente = find(obj.getId());
             obj.setCreationDate(existente.getCreationDate());
             obj.setAccount(existente.getAccount());

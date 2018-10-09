@@ -109,7 +109,7 @@ public class Customer implements Serializable {
     }
 
     public  boolean isValidCPF() {
-        if ((cpf==null) || (cpf.length()!=11)) return false;
+        if ((cpf==null) || (cpf.length()!=11)) throw new IllegalArgumentException("CPF must have  11 digits");
 
         Integer digit1 = digit(cpf.substring(0,9), cpfWeight);
         Integer digit2 = digit(cpf.substring(0,9) + digit1, cpfWeight);

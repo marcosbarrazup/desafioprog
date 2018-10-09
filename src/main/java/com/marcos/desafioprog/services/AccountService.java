@@ -29,7 +29,7 @@ public class AccountService {
     public Account find(Integer  id){
         Optional<Account> obj = accountRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Object not found! Id: " + id
-                + ", Tipo: " + Account.class.getName()));
+                + ", Type: " + Account.class.getName()));
     }
 
     public Operation transfer(Operation operation) {
@@ -79,6 +79,11 @@ public class AccountService {
         List <OperationDTO> list = operationRepository.
                 findAll().
                 stream().
+                map( x -> {
+                 if(x.getSourceAccount() == null) x.setSourceAccount(new Account());
+                 if(x.getDestinationAccount() == null) x.setDestinationAccount(new Account());
+                 return x;
+                }).
                 filter(c ->
                 c.getSourceAccount().getId() == id || c.getDestinationAccount().getId() == id)
                 .map(c -> new OperationDTO(c)).collect(Collectors.toList());
