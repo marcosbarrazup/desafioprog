@@ -217,7 +217,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         verify((accountRepository), times(1)).deleteById(anyInt());
     }
     @Test
-    public void deleteInvalidCliente(){
+    public void deleteInvalidClient(){
         Customer customer = new Customer();
         customer.setId(10);
         when(customerRepository.findById(anyInt())).thenReturn(Optional.ofNullable(null));

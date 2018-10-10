@@ -7,6 +7,7 @@ import com.marcos.desafioprog.domain.Operation;
 import com.marcos.desafioprog.enums.OperationType;
 
 
+import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ public class OperationDTO {
 
     private Integer id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Min(1)
     private Double value;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

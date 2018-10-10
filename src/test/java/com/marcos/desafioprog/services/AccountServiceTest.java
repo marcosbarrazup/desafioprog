@@ -69,7 +69,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void findNotFound() {
+    public void findNullAccount() {
 
         when(accountRepository.findById(anyInt())).thenReturn(Optional.ofNullable(null));
         thrown.expect(ObjectNotFoundException.class);
@@ -90,6 +90,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
         assertNotNull(result);
 
     }
+
     @Test
     public void transferInsufficient() {
         operation.setValue(150.0);
@@ -102,6 +103,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
 
     }
 
+
     @Test
     public void depositOk(){
 
@@ -109,6 +111,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
         Operation result = accountService.deposit(operation);
         assertNotNull(result);
     }
+
 
     @Test
     public void withdrawOk(){
@@ -151,7 +154,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void extratoHasAOperation(){
+    public void statementHasAOperation(){
         List<Operation> list = new ArrayList<>();
         list.add(operation);
         when(operationRepository.findAll()).thenReturn(list);
@@ -161,7 +164,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
         assertEquals(1,result.size());
     }
     @Test
-    public void extratoHasNotAOperation(){
+    public void statementHasNotAOperation(){
         List<Operation> list = new ArrayList<>();
         when(operationRepository.findAll()).thenReturn(list);
         when(accountRepository.findById(anyInt())).thenReturn(Optional.of(account1));
@@ -171,7 +174,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void extratoInvalidAccount(){
+    public void statementInvalidAccount(){
         List<Operation> list = new ArrayList<>();
         list.add(operation);
         when(operationRepository.findAll()).thenReturn(list);
