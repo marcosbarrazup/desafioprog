@@ -1,8 +1,7 @@
 language: java
-
-script: "mvn cobertura:cobertura"
-
-CODECOV_TOKEN="9b8ed8c4-920a-41c5-b122-c6d0d65915e4"
-
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+
+env:
+  global:
+  - CODECOV_TOKEN=:u9b8ed8c4-920a-41c5-b122-c6d0d65915e4

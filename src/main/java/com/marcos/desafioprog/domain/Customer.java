@@ -1,7 +1,7 @@
 package com.marcos.desafioprog.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.validator.constraints.br.CPF;
+
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -116,7 +116,8 @@ public class Customer implements Serializable {
                 "88888888888".equals(cpf) || "99999999999".equals(cpf);
     }
 
-    public  boolean isValidCPF() {
+    public  boolean
+    validCPF() {
         if ((cpf==null) || (cpf.length()!=11)) throw new IllegalArgumentException("CPF must have  11 digits");
 
         Integer digit1 = digit(cpf.substring(0,9), cpfWeight);

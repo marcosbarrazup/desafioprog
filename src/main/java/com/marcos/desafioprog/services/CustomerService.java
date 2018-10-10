@@ -37,7 +37,7 @@ public class CustomerService {
             throw new IllegalArgumentException("Name Required!");
         }
 
-        if (obj.isValidCPF() == false) throw new IllegalArgumentException("Invalid CPF");
+        if (obj.validCPF() == false) throw new IllegalArgumentException("Invalid CPF");
 
         if (customerRepository.findByCpf(obj.getCpf()) == null) {
             obj.setId(null);
@@ -63,7 +63,7 @@ public class CustomerService {
             throw new IllegalArgumentException("Name Required!");
         }
 
-        if (obj.isValidCPF() == false) throw new IllegalArgumentException("Invalid CPF");
+        if (obj.validCPF() == false) throw new IllegalArgumentException("Invalid CPF");
 
         if (customerRepository.findByCpf(obj.getCpf()) == null || customerRepository.findByCpf(obj.getCpf()).getId() == obj.getId()) {
             Customer existente = find(obj.getId());

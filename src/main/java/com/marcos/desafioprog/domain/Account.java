@@ -19,6 +19,7 @@ public class Account implements Serializable {
     private  Integer id;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate creationDate;
+
     private Double balance;
 
     @JsonIgnore

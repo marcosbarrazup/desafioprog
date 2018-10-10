@@ -148,9 +148,9 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     public void findAllNotFound(){
         List<Account> list = new ArrayList<>();
         when(accountRepository.findAll()).thenReturn(list);
-        List<Account> result = accountService.findAll();
-        assertNotNull(result);
-        assertEquals(0, result.size());
+        thrown.expect(ObjectNotFoundException.class);
+        accountService.findAll();
+
     }
 
     @Test
@@ -168,9 +168,9 @@ public class AccountServiceTest extends DesafioProgBaseTest {
         List<Operation> list = new ArrayList<>();
         when(operationRepository.findAll()).thenReturn(list);
         when(accountRepository.findById(anyInt())).thenReturn(Optional.of(account1));
-        List<OperationDTO> result = accountService.statement(1);
-        assertNotNull(result);
-        assertEquals(0,result.size());
+        thrown.expect(ObjectNotFoundException.class);
+        accountService.statement(1);
+
     }
 
     @Test
