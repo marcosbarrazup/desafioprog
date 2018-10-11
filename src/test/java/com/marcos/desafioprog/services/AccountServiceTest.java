@@ -154,8 +154,41 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void statementHasAOperation(){
+    public void statementHasATransferOperation(){
         List<Operation> list = new ArrayList<>();
+        list.add(operation);
+        when(operationRepository.findAll()).thenReturn(list);
+        when(accountRepository.findById(anyInt())).thenReturn(Optional.of(account1));
+        List<OperationDTO> result = accountService.statement(1);
+        assertNotNull(result);
+        assertEquals(1,result.size());
+    }
+    @Test
+    public void statementHasADepositOperation(){
+        List<Operation> list = new ArrayList<>();
+        operation.setSourceAccount(null);
+
+        Operation operation3 = new Operation();
+        Account account3 = new Account();
+        account3.setId(3);
+        Account account4 = new Account();
+        account4.setId(3);
+        operation3.setDestinationAccount(account3);
+        operation3.setSourceAccount(account4);
+
+        list.add(operation);
+        list.add(operation3);
+
+        when(operationRepository.findAll()).thenReturn(list);
+        when(accountRepository.findById(anyInt())).thenReturn(Optional.of(account1));
+        List<OperationDTO> result = accountService.statement(2);
+        assertNotNull(result);
+        assertEquals(1,result.size());
+    }
+    @Test
+    public void statementHasAWithdrawOperation(){
+        List<Operation> list = new ArrayList<>();
+        operation.setDestinationAccount(null);
         list.add(operation);
         when(operationRepository.findAll()).thenReturn(list);
         when(accountRepository.findById(anyInt())).thenReturn(Optional.of(account1));

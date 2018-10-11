@@ -169,7 +169,17 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
 
     }
     @Test
-    public void updateInvalidName(){
+    public void updateBlankName(){
+        Customer customer = new Customer();
+        customer.setId(10);
+        customer.setCpf("87427837398");
+        customer.setName("");
+        thrown.expect(IllegalArgumentException.class);
+        customerService.update(customer);
+
+    }
+    @Test
+    public void updateNullName(){
         Customer customer = new Customer();
         customer.setId(10);
         customer.setCpf("87427837398");
@@ -198,6 +208,22 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         when(customerRepository.findByCpf(anyString())).thenReturn(customer);
         thrown.expect(ExistentAccountException.class);
         customerService.update(customer2);
+
+    }
+    @Test
+    public void updateSameId(){
+        Customer customer = new Customer();
+        customer.setId(10);
+
+        Customer customer2 = new Customer();
+        customer2.setId(10);
+        customer2.setName("Name");
+        customer2.setCpf("87427837398");
+        when(customerRepository.findByCpf(anyString())).thenReturn(customer);
+        when(customerRepository.findById(anyInt())).thenReturn(Optional.of(customer));
+        when(customerRepository.saveAndFlush(any(Customer.class))).thenReturn(customer);
+        Customer result = customerService.update(customer2);
+        assertNotNull(result);
 
     }
 
