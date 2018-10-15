@@ -7,15 +7,23 @@ import com.marcos.desafioprog.exceptions.ObjectNotFoundException;
 import com.marcos.desafioprog.repositories.CustomerRepository;
 import com.marcos.desafioprog.repositories.AccountRepository;
 import com.marcos.desafioprog.services.base.DesafioProgBaseTest;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,9 +43,16 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     @InjectMocks
     private CustomerService customerService;
 
+    private static Validator validator;
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
+    @Before
+    public void setUp() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
 
     @Test
     public void findFound(){
@@ -108,8 +123,9 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         Customer customer = new Customer();
         customer.setCpf("01293819203");
 
-        thrown.expect(IllegalArgumentException.class);
-        customerService.insert(customer);
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        assertFalse(violations.isEmpty());
+        System.out.println(violations);
     }
     @Test
     public void insertBlankName(){
@@ -117,33 +133,36 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         customer.setCpf("01293819203");
         customer.setName("");
 
-        thrown.expect(IllegalArgumentException.class);
-        customerService.insert(customer);
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        assertFalse(violations.isEmpty());
+        System.out.println(violations);
     }
     @Test
     public void insertNullCPF(){
         Customer customer = new Customer();
         customer.setName("Nome");
 
-        thrown.expect(IllegalArgumentException.class);
-        customerService.insert(customer);
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        assertFalse(violations.isEmpty());
+        System.out.println(violations);
     }
     @Test
     public void insertWithNot11DigitsCPF(){
         Customer customer = new Customer();
         customer.setName("Nome");
         customer.setCpf("192819382");
-        thrown.expect(IllegalArgumentException.class);
-        customerService.insert(customer);
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        assertFalse(violations.isEmpty());
+        System.out.println(violations);
     }
     @Test
     public void insertInvalidCPF(){
         Customer customer = new Customer();
         customer.setName("Nome");
-        customer.setCpf("91829182938");
-
-        thrown.expect(IllegalArgumentException.class);
-        customerService.insert(customer);
+        customer.setCpf("12391829381");
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        assertFalse(violations.isEmpty());
+        System.out.println(violations);
     }
 
     @Test
@@ -164,8 +183,9 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         customer.setId(10);
         customer.setName("Name");
         customer.setCpf("10293810293");
-        thrown.expect(IllegalArgumentException.class);
-        customerService.update(customer);
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        assertFalse(violations.isEmpty());
+        System.out.println(violations);
 
     }
     @Test
@@ -174,8 +194,9 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         customer.setId(10);
         customer.setCpf("87427837398");
         customer.setName("");
-        thrown.expect(IllegalArgumentException.class);
-        customerService.update(customer);
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        assertFalse(violations.isEmpty());
+        System.out.println(violations);
 
     }
     @Test
@@ -183,8 +204,9 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         Customer customer = new Customer();
         customer.setId(10);
         customer.setCpf("87427837398");
-        thrown.expect(IllegalArgumentException.class);
-        customerService.update(customer);
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        assertFalse(violations.isEmpty());
+        System.out.println(violations);
 
     }
     @Test
@@ -192,8 +214,9 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         Customer customer = new Customer();
         customer.setId(10);
         customer.setName("Name");
-        thrown.expect(IllegalArgumentException.class);
-        customerService.update(customer);
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        assertFalse(violations.isEmpty());
+        System.out.println(violations);
 
     }
     @Test
@@ -267,9 +290,9 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     public void findAllNotFound(){
         List<Customer> list = new ArrayList<>();
         when(customerRepository.findAll()).thenReturn(list);
-        List<Customer> result = customerService.findAll();
-        assertNotNull(result);
-        assertEquals(0, result.size());
+        thrown.expect(ObjectNotFoundException.class);
+        customerService.findAll();
+
     }
 
 }

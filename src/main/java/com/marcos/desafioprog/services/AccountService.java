@@ -28,7 +28,7 @@ public class AccountService {
 
     public Account find(Integer  id){
         Optional<Account> obj = accountRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Object not found! Id: " + id
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Account not found! Id: " + id
                 + ", Type: " + Account.class.getName()));
     }
 
