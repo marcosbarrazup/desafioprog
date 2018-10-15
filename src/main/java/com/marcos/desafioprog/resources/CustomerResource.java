@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class CustomerResource {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> insert(@RequestBody Customer obj) {
+    public ResponseEntity<?> insert(@Valid @RequestBody Customer obj) {
 
 
         obj = customerService.insert(obj);
@@ -40,7 +41,7 @@ public class CustomerResource {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@RequestBody Customer obj, @PathVariable Integer id) {
+    public ResponseEntity<?> update(@Valid @RequestBody Customer obj, @PathVariable Integer id) {
         obj.setId(id);
         obj = customerService.update(obj);
         return ResponseEntity.ok().body(obj);

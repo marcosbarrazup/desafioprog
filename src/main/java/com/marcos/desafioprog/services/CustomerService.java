@@ -30,14 +30,14 @@ public class CustomerService {
     }
 
     public Customer insert(Customer obj) throws ExistentAccountException {
-
-        if (obj.getCpf() == null) {
-            throw new IllegalArgumentException("CPF Required!");
-        } else if (obj.getName() == null || obj.getName().isEmpty()) {
-            throw new IllegalArgumentException("Name Required!");
-        }
-
-        if (obj.validCPF() == false) throw new IllegalArgumentException("Invalid CPF");
+//
+//        if (obj.getCpf() == null) {
+//            throw new IllegalArgumentException("CPF Required!");
+//        } else if (obj.getName() == null || obj.getName().isEmpty()) {
+//            throw new IllegalArgumentException("Name Required!");
+//        }
+//
+//        if (obj.validCPF() == false) throw new IllegalArgumentException("Invalid CPF");
 
         if (customerRepository.findByCpf(obj.getCpf()) == null) {
             obj.setId(null);

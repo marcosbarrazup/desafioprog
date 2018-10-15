@@ -1,17 +1,22 @@
 package com.marcos.desafioprog.dto;
 
 import com.marcos.desafioprog.domain.Customer;
+import org.hibernate.validator.constraints.br.CPF;
 
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class CustomerDTO {
 
     private Integer id;
+    @NotEmpty(message = "Name Required")
     private String name;
+    @CPF(message = "Invalid CPF!")
+    private String cpf;
+
     private LocalDate creationDate;
 
-    private String cpf;
 
     public CustomerDTO() {
     }

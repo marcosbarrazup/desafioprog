@@ -1,9 +1,11 @@
 package com.marcos.desafioprog.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.br.CPF;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +21,9 @@ public class Customer implements Serializable {
 
 
 
+    @CPF
     private String cpf;
+    @NotEmpty
     private String name;
 
 
