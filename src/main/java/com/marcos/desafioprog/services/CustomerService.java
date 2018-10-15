@@ -25,19 +25,11 @@ public class CustomerService {
 
     public Customer find(Integer id) throws ObjectNotFoundException {
         Optional<Customer> obj = customerRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Customer not found! Id: " + id
                 + ", Tipo: " + Customer.class.getName()));
     }
 
     public Customer insert(Customer obj) throws ExistentAccountException {
-//
-//        if (obj.getCpf() == null) {
-//            throw new IllegalArgumentException("CPF Required!");
-//        } else if (obj.getName() == null || obj.getName().isEmpty()) {
-//            throw new IllegalArgumentException("Name Required!");
-//        }
-//
-//        if (obj.validCPF() == false) throw new IllegalArgumentException("Invalid CPF");
 
         if (customerRepository.findByCpf(obj.getCpf()) == null) {
             obj.setId(null);
@@ -57,13 +49,6 @@ public class CustomerService {
 
     public Customer update(Customer obj) {
 
-        if (obj.getCpf() == null) {
-            throw new IllegalArgumentException("CPF Required!");
-        } else if (obj.getName() == null || obj.getName().isEmpty()) {
-            throw new IllegalArgumentException("Name Required!");
-        }
-
-        if (obj.validCPF() == false) throw new IllegalArgumentException("Invalid CPF");
 
         if (customerRepository.findByCpf(obj.getCpf()) == null || customerRepository.findByCpf(obj.getCpf()).getId() == obj.getId()) {
             Customer existente = find(obj.getId());
@@ -84,7 +69,10 @@ public class CustomerService {
     }
 
     public List<Customer> findAll() {
-        return customerRepository.findAll();
+
+        List<Customer> result = customerRepository.findAll();
+        if(result.size()>0) return result;
+        throw new ObjectNotFoundException("No customers found!");
     }
 
 }

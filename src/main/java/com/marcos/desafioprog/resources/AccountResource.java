@@ -21,74 +21,74 @@ public class AccountResource {
     private AccountService service;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity <List<AccountDTO>> findAll(){
+    public List<AccountDTO> findAll(){
         List<Account> list = service.findAll();
         List<AccountDTO> listDto =  list.stream().map(obj -> new AccountDTO(obj)).collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(listDto);
+        return listDto;
     }
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> find(@PathVariable Integer  id){
+    public Account find(@PathVariable Integer  id){
 
-        Account obj = service.find(id);
-        return ResponseEntity.ok().body(obj);
+        Account account = service.find(id);
+        return account;
     }
 
     @RequestMapping(value = "/{source}/transfer/{destination}", method = RequestMethod.POST)
-    public ResponseEntity<?> transfer (@PathVariable Integer source, @RequestBody Operation operation, @PathVariable Integer destination){
+    public Operation transfer (@PathVariable Integer source, @RequestBody Operation operation, @PathVariable Integer destination){
 
         if(source ==  destination) throw new ExistentAccountException("Can not transfer to the same account!");
         operation.setSourceAccount(service.find(source));
         operation.setDestinationAccount(service.find(destination));
 
         Operation result = service.transfer(operation);
-        return ResponseEntity.ok().body(result);
+        return result;
     }
 
     @RequestMapping(value = "/{id}/deposit", method = RequestMethod.POST)
-    public ResponseEntity<?> deposit (@PathVariable Integer id,  @RequestBody Operation operation){
+    public Operation deposit (@PathVariable Integer id,  @RequestBody Operation operation){
 
 
         operation.setDestinationAccount(service.find(id));
 
-        Operation obj = service.deposit(operation);
+        Operation result = service.deposit(operation);
 
 
-        return ResponseEntity.ok().body(obj);
+        return result;
     }
 
 
     @RequestMapping(value = "/{id}/withdraw",  method = RequestMethod.POST)
-    public ResponseEntity<?> withdraw(@PathVariable Integer id, @RequestBody Operation operation){
+    public Operation withdraw(@PathVariable Integer id, @RequestBody Operation operation){
 
         operation.setSourceAccount(service.find(id));
 
 
         Operation result = service.withdraw(operation);
 
-        return ResponseEntity.ok().body(result);
+        return result;
 
     }
 
     @RequestMapping(value = "/{id}/balance", method = RequestMethod.GET)
-    public ResponseEntity<Account> balance(@PathVariable Integer  id){
+    public Account balance(@PathVariable Integer  id){
 
-        Account obj = service.find(id);
-        return ResponseEntity.ok().body(obj);
+        Account account = service.find(id);
+        return account;
     }
 
 
     @RequestMapping(value = "/{id}/statement", method = RequestMethod.GET)
-    public ResponseEntity<?> statement(@PathVariable Integer id){
+    public List<OperationDTO> statement(@PathVariable Integer id){
 
         OperationDTO saldo =  new OperationDTO(id,service.find(id).getBalance());
         List<OperationDTO> list = service.statement(id);
 
         list.add(saldo);
 
-        return  ResponseEntity.ok().body(list);
+        return list;
 
 
     }

@@ -23,44 +23,41 @@ public class CustomerResource {
     private CustomerService customerService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> find(@PathVariable Integer  id){
+    public Customer find(@PathVariable Integer  id){
 
-        Customer obj = customerService.find(id);
-        return ResponseEntity.ok().body(obj);
+        Customer customer = customerService.find(id);
+        return customer;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> insert(@Valid @RequestBody Customer obj) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Customer insert(@Valid @RequestBody Customer customer) {
 
-
-        obj = customerService.insert(obj);
-        URI uri = ServletUriComponentsBuilder.fromPath("localhost:8080/clientes").path("/{id}").buildAndExpand(obj.getId()).toUri();
-        if(obj!=null) return ResponseEntity.created(uri).body(obj);
-        return ResponseEntity.badRequest().build();
-
+        customer = customerService.insert(customer);
+        return customer;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@Valid @RequestBody Customer obj, @PathVariable Integer id) {
-        obj.setId(id);
-        obj = customerService.update(obj);
-        return ResponseEntity.ok().body(obj);
+    public Customer update(@Valid @RequestBody Customer customer, @PathVariable Integer id) {
+        customer.setId(id);
+        customer = customerService.update(customer);
+        return customer;
 
 
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void delete(@PathVariable Integer id) {
         customerService.delete(id);
-        return ResponseEntity.accepted().build();
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity <List<CustomerDTO>> findAll(){
+    public List<CustomerDTO> findAll(){
+
         List<Customer> list = customerService.findAll();
         List<CustomerDTO> listDto =  list.stream().map(obj -> new CustomerDTO(obj)).collect(Collectors.toList());
-
-        return ResponseEntity.ok().body(listDto);
+        return listDto;
     }
 
 

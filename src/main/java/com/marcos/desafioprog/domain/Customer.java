@@ -21,9 +21,10 @@ public class Customer implements Serializable {
 
 
 
-    @CPF
+    @CPF(message = "Invalid CPF!")
+    @NotEmpty(message = "Name Required")
     private String cpf;
-    @NotEmpty
+    @NotEmpty(message = "Name Required")
     private String name;
 
 

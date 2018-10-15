@@ -48,7 +48,7 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<StandardError> illegalArgument(ConstraintViolationException e, HttpServletRequest request) {
 
-        StandardError err = new StandardError( HttpStatus.BAD_REQUEST.value(),  "Valor  do  depósito deve ser maior que 1", LocalDateTime.now());
+        StandardError err = new StandardError( HttpStatus.BAD_REQUEST.value(), "Operation value must be higher than 1!", LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)

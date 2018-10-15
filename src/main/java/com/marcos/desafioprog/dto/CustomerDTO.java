@@ -13,6 +13,7 @@ public class CustomerDTO {
     @NotEmpty(message = "Name Required")
     private String name;
     @CPF(message = "Invalid CPF!")
+    @NotEmpty(message = "Name Required")
     private String cpf;
 
     private LocalDate creationDate;

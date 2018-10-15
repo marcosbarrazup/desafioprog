@@ -15,7 +15,7 @@ public class OperationDTO {
 
     private Integer id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Min(1)
+    @Min(value = 1)
     private Double value;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
