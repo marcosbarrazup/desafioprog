@@ -37,13 +37,14 @@ public class AccountResource {
     }
 
     @RequestMapping(value = "/{source}/transfer/{destination}", method = RequestMethod.POST)
-    public Operation transfer (@PathVariable Integer source, @RequestBody Operation operation, @PathVariable Integer destination){
+    public OperationDTO transfer (@PathVariable Integer source, @RequestBody Operation operation, @PathVariable Integer destination){
 
         if(source ==  destination) throw new ExistentAccountException("Can not transfer to the same account!");
         operation.setSourceAccount(service.find(source));
         operation.setDestinationAccount(service.find(destination));
 
-        Operation result = service.transfer(operation);
+        OperationDTO result = new OperationDTO(service.transfer(operation));
+
         return result;
     }
 
