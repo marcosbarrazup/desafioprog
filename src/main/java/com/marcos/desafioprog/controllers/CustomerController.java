@@ -1,23 +1,20 @@
-package com.marcos.desafioprog.resources;
+package com.marcos.desafioprog.controllers;
 
 import com.marcos.desafioprog.domain.Customer;
 import com.marcos.desafioprog.dto.CustomerDTO;
 import com.marcos.desafioprog.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 @RestController
 @RequestMapping(value = "/customers")
-public class CustomerResource {
+public class CustomerController {
 
     @Autowired
     private CustomerService customerService;

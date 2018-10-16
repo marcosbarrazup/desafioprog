@@ -1,4 +1,4 @@
-package com.marcos.desafioprog.resources.exceptions;
+package com.marcos.desafioprog.controllers.exceptions;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
