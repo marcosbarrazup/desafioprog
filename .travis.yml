@@ -1,15 +1,29 @@
 language: java
 
 sudo: false
+services:
+- docker
 
 env:
   global:
   - CODECOV_TOKEN="9b8ed8c4-920a-41c5-b122-c6d0d65915e4"
 
-script: "mvn cobertura:cobertura"
+before_script:
+  - sudo service postgresql stop
+script:
+  - "mvn cobertura:cobertura"
+  - docker-compose up --build -d postgres
+  - docker-compose ps
+  - mvn clean install
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)
+  - docker-compose down
+
+cache:
+    directories:
+    - $HOME/.m2
 
 notifications:
   emails:
@@ -17,3 +31,4 @@ notifications:
       -marcos.barra@zup.com.br
     on_success: always
     on_failure: always
+
