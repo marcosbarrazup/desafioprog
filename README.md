@@ -79,5 +79,5 @@ Add additional notes about how to deploy this on a live system
 
 ## Author
 
-* **Marcos Barra** - *Initial work* - [PurpleBooth](https://github.com/marcosbarrazup)
+* **Marcos Barra**  - [GitHub](https://github.com/marcosbarrazup)
 
