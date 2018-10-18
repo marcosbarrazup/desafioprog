@@ -28,8 +28,6 @@ public class Customer implements Serializable {
     private String name;
 
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate creationDate;
 
     @OneToOne
     @JoinColumn(name = "account_id")
@@ -38,12 +36,10 @@ public class Customer implements Serializable {
     public Customer() {
     }
 
-    public Customer(Integer id, String cpf, String name, String creationDate, Account idAccount) {
+    public Customer(Integer id, String cpf, String name,  Account idAccount) {
         this.id = id;
         this.cpf = cpf;
         this.name = name;
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        this.creationDate = LocalDate.parse(creationDate, dateTimeFormatter);
         this.account = idAccount;
     }
 
@@ -71,13 +67,6 @@ public class Customer implements Serializable {
         this.name = name;
     }
 
-    public LocalDate getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
-    }
 
     public Account getAccount() {
         return account;

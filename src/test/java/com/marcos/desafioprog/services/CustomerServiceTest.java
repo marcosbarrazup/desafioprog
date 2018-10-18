@@ -58,17 +58,17 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     public void findFound(){
 
         Customer customer = new Customer();
-        when(customerRepository.findById(anyInt())).thenReturn(Optional.of(customer));
-        Customer result = customerService.find(10);
+        when(customerRepository.findByCpf(anyString())).thenReturn(customer);
+        Customer result = customerService.find("02144312664");
         assertNotNull(result);
 
     }
     @Test
     public void findNotFound(){
 
-        when(customerRepository.findById(anyInt())).thenReturn(Optional.ofNullable(null));
+        when(customerRepository.findByCpf(anyString())).thenReturn(null);
         thrown.expect(ObjectNotFoundException.class);
-        Customer result = customerService.find(10);
+        Customer result = customerService.find("02144123123");
         assertNull(result);
     }
 
@@ -174,7 +174,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         when(customerRepository.findByCpf(anyString())).thenReturn(null);
         when(customerRepository.saveAndFlush(any(Customer.class))).thenReturn(customer);
         when(customerRepository.findById(anyInt())).thenReturn(Optional.of(customer));
-        Customer result = customerService.update(customer);
+        Customer result = customerService.update(customer, "87427837398");
         assertNotNull(result);
     }
     @Test
@@ -230,7 +230,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         customer2.setCpf("87427837398");
         when(customerRepository.findByCpf(anyString())).thenReturn(customer);
         thrown.expect(ExistentAccountException.class);
-        customerService.update(customer2);
+        customerService.update(customer2 , "87427837398");
 
     }
     @Test
@@ -245,7 +245,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         when(customerRepository.findByCpf(anyString())).thenReturn(customer);
         when(customerRepository.findById(anyInt())).thenReturn(Optional.of(customer));
         when(customerRepository.saveAndFlush(any(Customer.class))).thenReturn(customer);
-        Customer result = customerService.update(customer2);
+        Customer result = customerService.update(customer2, "87427837398");
         assertNotNull(result);
 
     }
@@ -255,12 +255,13 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     public void deleteOk(){
         Customer customer = new Customer();
         customer.setId(10);
+        customer.setCpf("02144312664");
         Account account = new Account();
         account.setId(10);
         customer.setAccount(account);
         when(customerRepository.findById(anyInt())).thenReturn(Optional.of(customer));
 
-        customerService.delete(10);
+        customerService.delete("02144312664");
 
         verify((customerRepository), times(1)).deleteById(anyInt());
         verify((accountRepository), times(1)).deleteById(anyInt());
@@ -269,9 +270,10 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     public void deleteInvalidClient(){
         Customer customer = new Customer();
         customer.setId(10);
+        customer.setCpf("02144312664");
         when(customerRepository.findById(anyInt())).thenReturn(Optional.ofNullable(null));
         thrown.expect(ObjectNotFoundException.class);
-        customerService.delete(10);
+        customerService.delete("02144312664");
 
         verify((customerRepository), times(0)).deleteById(anyInt());
     }

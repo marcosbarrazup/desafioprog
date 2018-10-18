@@ -23,10 +23,12 @@ public class CustomerService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public Customer find(Integer id) throws ObjectNotFoundException {
-        Optional<Customer> obj = customerRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Customer not found! Id: " + id
-                + ", Tipo: " + Customer.class.getName()));
+    public Customer find(String cpf) throws ObjectNotFoundException {
+        Customer obj = customerRepository.findByCpf(cpf);
+        if(obj !=null) return obj;
+        throw new ObjectNotFoundException("Customer not found! Id: " + cpf
+                + ", Tipo: " + Customer.class.getName());
+
     }
 
     public Customer insert(Customer obj) throws ExistentAccountException {
@@ -34,8 +36,7 @@ public class CustomerService {
         if (customerRepository.findByCpf(obj.getCpf()) == null) {
             obj.setId(null);
             obj.setAccount(null);
-            obj.setCreationDate(LocalDate.now());
-            Account account = new Account(null, obj.getCreationDate(), 0.0);
+            Account account = new Account(null, LocalDate.now(), 0.0);
             account = accountRepository.saveAndFlush(account);
             if (account != null) {
                 obj.setAccount(account);
@@ -47,12 +48,15 @@ public class CustomerService {
         throw new ExistentAccountException("CPF Already registered!");
     }
 
-    public Customer update(Customer obj) {
+    public Customer update(Customer obj, String cpf) {
 
 
-        if (customerRepository.findByCpf(obj.getCpf()) == null || customerRepository.findByCpf(obj.getCpf()).getId() == obj.getId()) {
-            Customer existente = find(obj.getId());
-            obj.setCreationDate(existente.getCreationDate());
+        Customer existente  = customerRepository.findByCpf(cpf);
+        if(existente==null) throw new ObjectNotFoundException("Customer not Found!");
+
+        if (customerRepository.findByCpf(obj.getCpf()) == null || customerRepository.findByCpf(obj.getCpf()).getId() == existente.getId()) {
+
+            obj.setId(existente.getId());
             obj.setAccount(existente.getAccount());
 
             return customerRepository.saveAndFlush(obj);
@@ -61,9 +65,10 @@ public class CustomerService {
         throw new ExistentAccountException("CPF Already registered!");
     }
 
-    public void delete(Integer id) {
-        Customer customer = find(id);
-        customerRepository.deleteById(id);
+    public void delete(String cpf) {
+        Customer customer = customerRepository.findByCpf(cpf);
+        if(customer == null) throw new ObjectNotFoundException("Customer not Found!");
+        customerRepository.deleteById(customer.getId());
         accountRepository.deleteById(customer.getAccount().getId());
 
     }

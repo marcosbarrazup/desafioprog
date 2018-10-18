@@ -1,5 +1,6 @@
 package com.marcos.desafioprog.dto;
 
+import com.marcos.desafioprog.domain.Account;
 import com.marcos.desafioprog.domain.Customer;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -9,24 +10,24 @@ import java.util.Objects;
 
 public class CustomerDTO {
 
-    private Integer id;
+    //private Integer id;
     @NotEmpty(message = "Name Required")
     private String name;
     @CPF(message = "Invalid CPF!")
     @NotEmpty(message = "Name Required")
     private String cpf;
 
-    private LocalDate creationDate;
+    private Account account;
+
 
 
     public CustomerDTO() {
     }
 
     public CustomerDTO(Customer c){
-        this.id = c.getId();
         this.name = c.getName();
-        this.creationDate = c.getCreationDate();
         this.cpf = c.getCpf();
+        this.account= c.getAccount();
     }
 
     public String getCpf() {
@@ -42,36 +43,30 @@ public class CustomerDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomerDTO that = (CustomerDTO) o;
-        return Objects.equals(getId(), that.getId());
+        return Objects.equals(getCpf(), that.getCpf());
     }
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+        return Objects.hash(getCpf());
     }
 
     public String getName() {
         return name;
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public LocalDate getCreationDate() {
-        return creationDate;
-    }
 
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
-    }
 }
