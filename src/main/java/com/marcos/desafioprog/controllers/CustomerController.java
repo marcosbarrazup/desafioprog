@@ -1,55 +1,53 @@
-package com.marcos.desafioprog.resources;
+package com.marcos.desafioprog.controllers;
 
 import com.marcos.desafioprog.domain.Customer;
 import com.marcos.desafioprog.dto.CustomerDTO;
 import com.marcos.desafioprog.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 @RestController
 @RequestMapping(value = "/customers")
-public class CustomerResource {
+public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Customer find(@PathVariable Integer  id){
+    @RequestMapping(value = "/{cpf}", method = RequestMethod.GET)
+    public Customer find(@PathVariable String  cpf){
 
-        Customer customer = customerService.find(id);
+        Customer customer = customerService.find(cpf);
         return customer;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public Customer insert(@Valid @RequestBody Customer customer) {
+    public CustomerDTO insert(@Valid @RequestBody Customer customer) {
 
         customer = customerService.insert(customer);
-        return customer;
+
+        return new CustomerDTO(customer);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public Customer update(@Valid @RequestBody Customer customer, @PathVariable Integer id) {
-        customer.setId(id);
-        customer = customerService.update(customer);
-        return customer;
+    @RequestMapping(value = "/{cpf}", method = RequestMethod.PUT)
+    public CustomerDTO update(@Valid @RequestBody Customer customer, @PathVariable String cpf) {
+
+        customer = customerService.update(customer, cpf);
+        return new CustomerDTO(customer);
 
 
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{cpf}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void delete(@PathVariable Integer id) {
-        customerService.delete(id);
+    public void delete(@PathVariable String cpf) {
+        customerService.delete(cpf);
     }
 
     @RequestMapping(method = RequestMethod.GET)
