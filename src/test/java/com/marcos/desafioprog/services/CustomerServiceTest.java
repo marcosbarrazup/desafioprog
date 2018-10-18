@@ -171,9 +171,9 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         customer.setId(10);
         customer.setName("Name");
         customer.setCpf("87427837398");
-        when(customerRepository.findByCpf(anyString())).thenReturn(null);
+        when(customerRepository.findByCpf(anyString())).thenReturn(customer);
         when(customerRepository.saveAndFlush(any(Customer.class))).thenReturn(customer);
-        when(customerRepository.findById(anyInt())).thenReturn(Optional.of(customer));
+
         Customer result = customerService.update(customer, "87427837398");
         assertNotNull(result);
     }
@@ -228,9 +228,11 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         customer2.setId(15);
         customer2.setName("Name");
         customer2.setCpf("87427837398");
-        when(customerRepository.findByCpf(anyString())).thenReturn(customer);
+        when(customerRepository.findByCpf("87427837398")).thenReturn(customer2);
+        when(customerRepository.findByCpf("02144312664")).thenReturn(customer);
+
         thrown.expect(ExistentAccountException.class);
-        customerService.update(customer2 , "87427837398");
+        customerService.update(customer2 , "02144312664");
 
     }
     @Test
@@ -259,7 +261,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         Account account = new Account();
         account.setId(10);
         customer.setAccount(account);
-        when(customerRepository.findById(anyInt())).thenReturn(Optional.of(customer));
+        when(customerRepository.findByCpf(anyString())).thenReturn(customer);
 
         customerService.delete("02144312664");
 
