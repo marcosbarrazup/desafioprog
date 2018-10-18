@@ -1,5 +1,18 @@
 # Bank Simulator
 
+<div align="center">
+  <!-- Build Status -->
+  <a href="https://travis-ci.org/marcosbarrazup/desafioprog">
+    <img src="https://img.shields.io/travis/choojs/choo/master.svg?style=flat-square"
+      alt="Build Status" />
+  </a>
+  <!-- Test Coverage -->
+  <a href="https://codecov.io/gh/marcosbarrazup/desafioprog">
+    <img src="https://img.shields.io/codecov/c/github/choojs/choo/master.svg?style=flat-square"
+      alt="Test Coverage" />
+  </a>
+</div>
+
 This project is a Bank System Simulator. With that simulator, you  can: 
 - Insert customers (Auto-generated accounts)
 - Make deposits
