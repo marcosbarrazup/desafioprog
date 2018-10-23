@@ -119,6 +119,17 @@ Open the Postman and feel free to send these requests :D
 }
 ```
 
+## Business Rules 
+
+- Account balance should never be  negative;
+- Should not be possible to make withdrawals or transfers with insufficient balance;
+- Destination account should be valid;
+- Client must have just one account (Validation by CPF);
+- Return the account Id at the customer registration;
+- At the bank statement, show all the account movement, like transfers, withdrawals and deposits;
+- At the bank transfer, source and destination accounts must be valid; 
+- Should not be possible to make a bank transfer to the same account.
+
 ## DER
 ![DER](DER.jpg)
 
