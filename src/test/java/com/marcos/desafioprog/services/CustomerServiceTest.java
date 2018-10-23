@@ -55,7 +55,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void findFound(){
+    public void find_IfCustomerExistsShouldReturnThat(){
 
         Customer customer = new Customer();
         when(customerRepository.findByCpf(anyString())).thenReturn(customer);
@@ -64,7 +64,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
 
     }
     @Test
-    public void findNotFound(){
+    public void find_IfAccountIsNullMustReturnNull(){
 
         when(customerRepository.findByCpf(anyString())).thenReturn(null);
         thrown.expect(ObjectNotFoundException.class);
@@ -73,7 +73,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void insertOk(){
+    public void insert_ValidAccountShouldInsertAndReturnThat(){
         Account account = new Account();
         Customer customer = new Customer();
         customer.setCpf("87427837398");
@@ -85,8 +85,8 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         assertNotNull(result);
     }
     @Test
-    public void insertNotSavedAccount(){
-        Account account = new Account();
+    public void insert_IfDoesntSaveTheAccountShouldReturnNull(){
+
         when(customerRepository.findByCpf(anyString())).thenReturn(null);
         when(accountRepository.saveAndFlush(any(Account.class))).thenReturn(null);
         Customer customer = new Customer();
@@ -97,7 +97,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void insertNotSavedCustomer(){
+    public void insert_IfDoesntSaveTheCustomerShouldReturnNull(){
         Account account = new Account();
         when(customerRepository.findByCpf(anyString())).thenReturn(null);
         when(accountRepository.saveAndFlush(any(Account.class))).thenReturn(account);
@@ -109,7 +109,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         assertNull(result);
     }
     @Test
-    public void insertExistentAccount(){
+    public void insert_IfAccountAlreadyExistsThrowAnException(){
         Customer customer = new Customer();
         customer.setCpf("87427837398");
         customer.setName("Nome");
@@ -119,7 +119,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         customerService.insert(customer);
     }
     @Test
-    public void insertNullName(){
+    public void insert_IfNameIsNullThenThrowAnException(){
         Customer customer = new Customer();
         customer.setCpf("01293819203");
 
@@ -128,7 +128,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         System.out.println(violations);
     }
     @Test
-    public void insertBlankName(){
+    public void insert_IfNameIsBlankThenThrowAnException(){
         Customer customer = new Customer();
         customer.setCpf("01293819203");
         customer.setName("");
@@ -138,7 +138,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         System.out.println(violations);
     }
     @Test
-    public void insertNullCPF(){
+    public void insert_IfCpfIsNullThenThrowAnException(){
         Customer customer = new Customer();
         customer.setName("Nome");
 
@@ -147,7 +147,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         System.out.println(violations);
     }
     @Test
-    public void insertWithNot11DigitsCPF(){
+    public void insert_IfCpfDoesntHave11DigitsThenThrowAnException(){
         Customer customer = new Customer();
         customer.setName("Nome");
         customer.setCpf("192819382");
@@ -156,7 +156,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         System.out.println(violations);
     }
     @Test
-    public void insertInvalidCPF(){
+    public void insert_IfCpfIsInvalidThenThrowAnException(){
         Customer customer = new Customer();
         customer.setName("Nome");
         customer.setCpf("12391829381");
@@ -166,7 +166,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void updateOk(){
+    public void update_IfAllTheArgumentsAreValidThenReturnTheNewCustomer(){
         Customer customer = new Customer();
         customer.setId(10);
         customer.setName("Name");
@@ -178,7 +178,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         assertNotNull(result);
     }
     @Test
-    public void updateInvalidCPF(){
+    public void update_IfCpfIsInvalidThenThrowAnException(){
         Customer customer = new Customer();
         customer.setId(10);
         customer.setName("Name");
@@ -189,7 +189,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
 
     }
     @Test
-    public void updateBlankName(){
+    public void update_IfNameIsBlankThenThrowAnException(){
         Customer customer = new Customer();
         customer.setId(10);
         customer.setCpf("87427837398");
@@ -200,7 +200,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
 
     }
     @Test
-    public void updateNullName(){
+    public void update_IfNameIsNullThenThrowAnException(){
         Customer customer = new Customer();
         customer.setId(10);
         customer.setCpf("87427837398");
@@ -210,7 +210,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
 
     }
     @Test
-    public void updateNullCPF(){
+    public void update_IfCpfIsNullThenThrowAnException(){
         Customer customer = new Customer();
         customer.setId(10);
         customer.setName("Name");
@@ -220,7 +220,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
 
     }
     @Test
-    public void updateSameCPF(){
+    public void update_IfCpfAlreadyExistsThenThrowAnException(){
         Customer customer = new Customer();
         customer.setId(10);
 
@@ -234,7 +234,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
 
     }
     @Test
-    public void updateSameId(){
+    public void update_IfCpfAlreadyExistsAndIsHimselfThenReturnTheNewCustomer(){
         Customer customer = new Customer();
         customer.setId(10);
 
@@ -252,7 +252,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
 
 
     @Test
-    public void deleteOk(){
+    public void delete_IfCustomerExistsVerifyThatHeWasDeleted(){
         Customer customer = new Customer();
         customer.setId(10);
         customer.setCpf("02144312664");
@@ -267,7 +267,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         verify((accountRepository), times(1)).deleteById(anyInt());
     }
     @Test
-    public void deleteInvalidClient(){
+    public void delete_InvalidCustomerShouldThrowAnException(){
         Customer customer = new Customer();
         customer.setId(10);
         customer.setCpf("02144312664");
@@ -279,7 +279,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void findAllFound(){
+    public void findAll_FoundAtLeastOneShouldReturnAnCustomerList(){
         List<Customer> list = new ArrayList<>();
         Customer cli = new Customer();
         list.add(cli);
@@ -289,7 +289,7 @@ public class CustomerServiceTest extends DesafioProgBaseTest {
         assertEquals(1, result.size());
     }
     @Test
-    public void findAllNotFound(){
+    public void findAll_NotFoundShouldReturnAnException(){
         List<Customer> list = new ArrayList<>();
         when(customerRepository.findAll()).thenReturn(list);
         thrown.expect(ObjectNotFoundException.class);

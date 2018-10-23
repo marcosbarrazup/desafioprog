@@ -59,7 +59,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void findFound() {
+    public void find_IfAccountExistsShouldReturnThat() {
 
         Account account = new Account();
         when(accountRepository.findById(anyInt())).thenReturn(Optional.of(account));
@@ -69,7 +69,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void findNullAccount() {
+    public void find_IfAccountIsNullMustReturnNull() {
 
         when(accountRepository.findById(anyInt())).thenReturn(Optional.ofNullable(null));
         thrown.expect(ObjectNotFoundException.class);
@@ -78,7 +78,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void transferOk() {
+    public void transfer_IfHaveSufficientBalanceShouldReturnAnOperation() {
         operation.setValue(100.0);
         account1.setBalance(100.0);
         operation.setSourceAccount(account1);
@@ -92,7 +92,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void transferInsufficient() {
+    public void transfer_IfHaveInsufficientBalanceShouldReturnException() {
         operation.setValue(150.0);
         account1.setBalance(100.0);
         operation.setSourceAccount(account1);
@@ -105,7 +105,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
 
 
     @Test
-    public void depositOk(){
+    public void deposit_ValidAccountShouldReturnTheOperation(){
 
         when(operationRepository.saveAndFlush(any(Operation.class))).thenReturn(operation);
         Operation result = accountService.deposit(operation);
@@ -114,7 +114,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
 
 
     @Test
-    public void withdrawOk(){
+    public void withdraw_SufficientBalanceShouldReturnOperation(){
         operation.setValue(100.0);
         account1.setBalance(100.0);
         operation.setSourceAccount(account1);
@@ -124,7 +124,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
         assertNotNull(result);
     }
     @Test
-    public void withdrawInsufficient(){
+    public void withdraw_InsufficientBalanceShouldThrowAnException(){
         operation.setValue(150.0);
         account1.setBalance(100.0);
         operation.setSourceAccount(account1);
@@ -135,7 +135,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void findAllFound(){
+    public void findAll_FoundAtLeast1AccountShouldReturnAnAccountList(){
         List<Account> list = new ArrayList<>();
         list.add(account1);
         list.add(account2);
@@ -145,7 +145,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
         assertEquals(2, result.size());
     }
     @Test
-    public void findAllNotFound(){
+    public void findAll_NotFoundShouldReturnAnException(){
         List<Account> list = new ArrayList<>();
         when(accountRepository.findAll()).thenReturn(list);
         thrown.expect(ObjectNotFoundException.class);
@@ -154,7 +154,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void statementHasATransferOperation(){
+    public void statement_IfHasATransferOperationShouldReturnAnOperationList(){
         List<Operation> list = new ArrayList<>();
         list.add(operation);
         when(operationRepository.findAll()).thenReturn(list);
@@ -164,7 +164,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
         assertEquals(1,result.size());
     }
     @Test
-    public void statementHasADepositOperation(){
+    public void statement_IfHasADepositOperationShouldReturnAnOperationList(){
         List<Operation> list = new ArrayList<>();
         operation.setSourceAccount(null);
 
@@ -186,7 +186,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
         assertEquals(1,result.size());
     }
     @Test
-    public void statementHasAWithdrawOperation(){
+    public void statement_IfHasAWithdrawOperationShouldReturnAnOperationList(){
         List<Operation> list = new ArrayList<>();
         operation.setDestinationAccount(null);
         list.add(operation);
@@ -197,7 +197,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
         assertEquals(1,result.size());
     }
     @Test
-    public void statementHasNotAOperation(){
+    public void statement_IfHasNotAOperationShouldThrowAnException(){
         List<Operation> list = new ArrayList<>();
         when(operationRepository.findAll()).thenReturn(list);
         when(accountRepository.findById(anyInt())).thenReturn(Optional.of(account1));
@@ -207,7 +207,7 @@ public class AccountServiceTest extends DesafioProgBaseTest {
     }
 
     @Test
-    public void statementInvalidAccount(){
+    public void statement_IfInvalidAccountThenThrowAnException(){
         List<Operation> list = new ArrayList<>();
         list.add(operation);
         when(operationRepository.findAll()).thenReturn(list);
