@@ -32,6 +32,7 @@ What things you need to install the software and how to install them
 * [Postgres](https://www.postgresql.org/download/) 
 * [Docker Compose](https://docs.docker.com/compose/install/) 
 * [Postman](https://www.getpostman.com/apps) 
+* [IntelliJ IDEA](https://www.jetbrains.com/idea/) 
 
 
 
@@ -51,37 +52,76 @@ After, run the docker-compose
 docker-compose up
 ```
 
-And repeat
+Now, open the IntelliJ IDEA and run the runnable "DesafioProgApplication"
 
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+Open the Postman and feel free to send these requests :D
 
-### Break down into end to end tests
+![Postman Example](printExample.png)
 
-Explain what these tests test and why
-
+- Insert Customers: **localhost:8080/customers** - POST -  With that  body the system will insert a customer: 
 ```
-Give an example
+{
+	"name": "Example",
+	"cpf": "ValidCPF"
+}
+```
+- List Customers: **localhost:8080/customers** - *GET* - With that request the system will show all the customers.
+
+
+- Search Customer: **localhost:8080/customers/{{cpf}}** - *GET* - With that request and a registered CPF the  system will return that customer.
+
+
+- Update Customer: **localhost:8080/customers/{{cpf}}** - *PUT* - With that request, a registered CPF and this body, you can update that customer:
+```
+{
+	"name": "NewExampleName",
+	"cpf": "NewValidCPF"
+}
 ```
 
-### And coding style tests
 
-Explain what these tests test and why
+- Delete Customer: **localhost:8080/customers/{{cpf}}** - *DELETE* - With that request and registered CPF, you will delete that customer.
 
+
+- List Accounts: **localhost:8080/accounts** - *GET* - With that request, the system will show all the accounts.
+
+
+- Search Account: **localhost:8080/accounts/{{id}}** - *GET* - With that request and a valid Account ID, the system will return the associated account.
+
+
+- Statement: **localhost:8080/accounts/{{id}}/statement** - *GET* - With that request and a valid Account ID, the system will show the associated bank statement.
+
+
+- Deposit: **localhost:8080/accounts/{{id}}/deposit** - *POST* - With that request, a valid Account ID and this body, you will deposit on that account:
+ ```
+{
+	"value": 100.0
+}
 ```
-Give an example
+
+
+- Transfer: **localhost:8080/accounts/{{id1}}/transfer/{{id2}}** - *POST* - With that request and two valids Account IDs, you will transfer from Account ID1 to Account ID2,  with this body:
+ ```
+{
+	"value": 100.0
+}
 ```
 
-## Deployment
 
-Add additional notes about how to deploy this on a live system
+- Withdraw : **localhost:8080/accounts/{{id}}/withdraw** - *POST* - With that request and a valid Account ID, you will make a bank withdraw from the associated account, with this body:
+
+ ```
+{
+	"value": 100.0
+}
+```
+
+## DER
+![DER](DER.jpg)
+
 
 ## Built With
 
