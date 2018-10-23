@@ -6,6 +6,7 @@
     <img src="https://img.shields.io/travis/choojs/choo/master.svg?style=flat-square"
       alt="Build Status" />
   </a>
+	
   <!-- Test Coverage -->
   <a href="https://codecov.io/gh/marcosbarrazup/desafioprog">
     <img src="https://img.shields.io/codecov/c/github/choojs/choo/master.svg?style=flat-square"
