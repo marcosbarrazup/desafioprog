@@ -6,7 +6,13 @@
     <groupId>com.marcos.desafioprog</groupId>
     <artifactId>desafioprog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <modules>
+        <module>bank_controller</module>
+        <module>bank_repositories</module>
+        <module>bank_services</module>
+        <module>bank_domain</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <name>desafioprog</name>
     <description>Demo project for Spring Boot</description>
@@ -54,20 +60,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.liquibase</groupId>-->
+            <!--<artifactId>liquibase-core</artifactId>-->
+            <!--<version>3.4.1</version>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
